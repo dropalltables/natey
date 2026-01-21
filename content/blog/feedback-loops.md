@@ -1,7 +1,7 @@
 +++
 title = "I'm Sorry Dave, I'm Afraid I Can't See That"
 slug = "feedback-loops"
-date = "2026-01-21T09:59:37-08:00"
+date = "2026-01-21T12:11:47-08:00"
 description = "A look at why vibe-coding in the traditional sense doesn't work, and a (known) solution to it."
 draft = "true"
 tags = ["amp","email","programming","web","ai","claude","feedbackloop"]

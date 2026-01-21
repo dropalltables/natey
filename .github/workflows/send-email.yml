@@ -151,6 +151,7 @@ jobs:
             
             # Extract title (handle both quoted and unquoted)
             TITLE=$(echo "$FRONTMATTER" | grep "^title\s*=" | head -n 1 | sed 's/^title\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
+            DESCRIPTION=$(echo "$FRONTMATTER" | grep "^description\s*=" | head -n 1 | sed 's/^description\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
             POST_SLUG=$(basename "$file" .md)
             POST_URL="https://viruus.zip/$POST_SLUG/"
             POST_DATE=$(echo "$FRONTMATTER" | grep "^date\s*=" | head -n 1 | sed 's/^date\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
@@ -184,6 +185,10 @@ jobs:
             # Fix relative image paths to absolute URLs
             POST_HTML=$(echo "$POST_HTML" | sed 's|src="/images/|src="https://viruus.zip/images/|g')
             
+            # Inline CSS classes (email clients don't support external CSS)
+            # Convert class="half-width" to inline style
+            POST_HTML=$(echo "$POST_HTML" | sed 's|class="half-width"|style="width: 50%;"|g')
+            
             # Remove footnote anchor links (email clients don't handle anchors well)
             # Use perl with -0777 flag to handle multiline HTML properly
             
@@ -203,11 +208,16 @@ jobs:
             POST_HTML=$(echo "$POST_HTML" | perl -pe 's| role="doc-backlink"||g')
             POST_HTML=$(echo "$POST_HTML" | perl -pe 's| role="doc-endnotes"||g')
             
-            # Add simple header (date + canonical link), separator, and unsubscribe footer
+            # Add preheader (hidden text for email preview), header, separator, and unsubscribe footer
+            # Preheader is hidden but email clients use it as preview text
+            PREHEADER_HTML=""
+            if [ -n "$DESCRIPTION" ]; then
+              PREHEADER_HTML="<div style=\"display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;\">$DESCRIPTION</div>"
+            fi
             HEADER_HTML="<p><time datetime=\"$POST_DATE_ISO\">$POST_DATE_DISPLAY</time> - <a href=\"$POST_URL\">Read on my website</a></p>"
             SEPARATOR_HTML="<hr />"
             UNSUBSCRIBE_HTML="<p>If you no longer want these emails, <a href=\"{{{RESEND_UNSUBSCRIBE_URL}}}\">unsubscribe</a>.</p>"
-            POST_HTML="${HEADER_HTML}${POST_HTML}${SEPARATOR_HTML}${UNSUBSCRIBE_HTML}"
+            POST_HTML="${PREHEADER_HTML}${HEADER_HTML}${POST_HTML}${SEPARATOR_HTML}${UNSUBSCRIBE_HTML}"
             
             # Escape content for JSON
             POST_HTML_ESCAPED=$(echo "$POST_HTML" | jq -Rs .)
