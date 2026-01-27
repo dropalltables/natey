@@ -6,11 +6,3 @@ pages_build_output_dir = "public"
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
 dataset = "viruus_analytics"
-
-# Enable observability (logs visible in CF dashboard)
-[observability]
-enabled = true
-
-[observability.logs]
-invocation_logs = true
-head_sampling_rate = 1
