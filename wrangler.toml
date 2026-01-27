@@ -16,6 +16,10 @@ run_worker_first = true  # Run Worker on every request (needed for analytics)
 enabled = true
 head_sampling_rate = 1  # Log 100% of requests (reduce if hitting limits)
 
+[observability.traces]
+enabled = true
+head_sampling_rate = 1
+
 # Analytics Engine binding for pageview tracking
 [[analytics_engine_datasets]]
 binding = "ANALYTICS"
