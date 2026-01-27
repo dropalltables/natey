@@ -10,7 +10,7 @@ This is a static website built with [Hugo](https://gohugo.io/) using the [hugo-b
 - Minimal JavaScript philosophy (only used for Cloudflare Turnstile spam protection on contact form)
 - Custom Berkeley Mono font
 - Custom emoji rendering system
-- Automated deployment to Vercel
+- Deployed to Cloudflare Pages with server-side analytics via Pages Functions
 - GitHub Actions for email automation
 
 **Base URL**: https://viruus.zip  
@@ -94,10 +94,14 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 │       └── emojis/      # Custom emoji images
 ├── themes/
 │   └── hugo-bearblog/   # Theme submodule
+├── functions/           # Cloudflare Pages Functions
+│   ├── _middleware.ts   # Server-side analytics (runs on every request)
+│   └── tsconfig.json    # TypeScript config for functions
 ├── .github/
 │   └── workflows/
 │       └── send-email.yml  # Email automation
 ├── hugo.toml            # Site configuration
+├── wrangler.toml        # Cloudflare Pages config
 └── datedooter.sh        # Timestamp update utility
 ```
 
@@ -185,6 +189,68 @@ The site uses hugo-bearblog theme as a base but overrides:
 - `layouts/_default/baseof.html` - Custom base template
 - Custom CSS for typography and link styling
 
+## Server-Side Analytics
+
+### Overview
+
+Privacy-respecting, server-side analytics using Cloudflare Pages Functions. **No client-side JavaScript** - works even with JS disabled.
+
+### How It Works
+
+The `functions/_middleware.ts` runs on every request and:
+1. Filters to only track HTML page views (not assets, bots, etc.)
+2. Extracts referrer and categorizes source (search, social, dev, direct, other)
+3. Captures page path, from-path (for internal navigation), country
+4. Logs to Cloudflare Analytics Engine
+
+### Data Captured
+
+- **path**: Current page URL path
+- **source**: Categorized referrer (google, github, twitter, direct, etc.)
+- **refHost**: Referring hostname
+- **fromPath**: Previous page path (internal navigation only)
+- **country**: Visitor country from CF geo
+- **UTM params**: utm_source, utm_medium, utm_campaign if present
+
+### Referrer Categories
+
+- **search**: Google, Bing, DuckDuckGo, Brave, Kagi, etc.
+- **social**: Twitter/X, Facebook, LinkedIn, Instagram, Threads, Bluesky, Mastodon
+- **dev**: GitHub, Hacker News, Lobsters, Reddit, Dev.to, Stack Overflow
+- **direct**: No referrer
+- **internal**: Navigation within viruus.zip
+- **other**: Any other referrer
+
+### Querying Stats
+
+Access via Cloudflare Analytics Engine dashboard or GraphQL API. Example queries:
+
+```sql
+-- Top sources
+SELECT blob1 AS source, SUM(double1) AS views 
+FROM viruus_analytics GROUP BY source ORDER BY views DESC
+
+-- Top pages  
+SELECT index1 AS path, SUM(double1) AS views
+FROM viruus_analytics GROUP BY path ORDER BY views DESC
+
+-- Top external referrers
+SELECT blob2 AS referrer, SUM(double1) AS views
+FROM viruus_analytics WHERE blob2 != '' GROUP BY referrer ORDER BY views DESC
+
+-- Internal navigation patterns
+SELECT blob3 AS from_path, index1 AS to_path, SUM(double1) AS count
+FROM viruus_analytics WHERE blob3 != '' GROUP BY from_path, to_path ORDER BY count DESC
+```
+
+### Viewing Stats
+
+All data is accessible via Cloudflare's native tools:
+
+1. **Real-time logs**: CF Dashboard → Pages → Your Project → Functions → Logs
+2. **Analytics Engine queries**: CF Dashboard → Analytics & Logs → Analytics Engine
+3. **GraphQL API**: Query `viruus_analytics` dataset programmatically
+
 ## Email Automation System
 
 ### Overview
@@ -249,9 +315,21 @@ The workflow intelligently handles different scenarios:
 
 ## Deployment
 
-- **Build command**: `hugo` (default)
-- **Output directory**: `public/` (default)
+Deployed to **Cloudflare Pages** (not Vercel).
+
+- **Build command**: `hugo`
+- **Output directory**: `public/`
 - **Domain**: viruus.zip
+- **Functions**: `functions/` directory contains Pages Functions
+
+### Cloudflare Pages Setup
+
+1. Connect repo to Cloudflare Pages
+2. Set build command: `hugo`
+3. Set output directory: `public/`
+4. Add Analytics Engine binding in Pages settings:
+   - Variable name: `ANALYTICS`
+   - Dataset: `viruus_analytics`
 
 ### Git Workflow
 

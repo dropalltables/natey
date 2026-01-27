@@ -29,3 +29,10 @@ Icon
 
 # Vercel
 .vercel
+
+# Wrangler
+.wrangler
+.dev.vars
+
+# Node
+node_modules/
