@@ -1,6 +1,19 @@
 name = "viruus"
+main = "src/worker.ts"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = "public"
+
+# Static assets configuration (replaces pages_build_output_dir)
+[assets]
+directory = "public"
+binding = "ASSETS"
+not_found_handling = "404-page"
+html_handling = "auto-trailing-slash"
+
+# Enable Workers Observability (logs + traces in dashboard)
+# Free tier: 200k log events/day, 3-day retention
+[observability]
+enabled = true
+head_sampling_rate = 1  # Log 100% of requests (reduce if hitting limits)
 
 # Analytics Engine binding for pageview tracking
 [[analytics_engine_datasets]]
