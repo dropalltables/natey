@@ -17,8 +17,7 @@ enabled = true
 head_sampling_rate = 1  # Log 100% of requests (reduce if hitting limits)
 
 [observability.traces]
-enabled = true
-head_sampling_rate = 1
+enabled = false
 
 # Analytics Engine binding for pageview tracking
 [[analytics_engine_datasets]]
