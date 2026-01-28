@@ -141,7 +141,7 @@ tags = ["tag1", "tag2", "tag3"]
 
 1. **Minimal JavaScript**: Site philosophy is to avoid JavaScript except where necessary for spam protection
    - Contact form uses Cloudflare Turnstile (requires JavaScript)
-   - Warning page (`/javascript`) redirects users before they encounter JavaScript
+   - Warning pages (`/javascript-contact`, `/javascript-stuff`, `/javascript-cdp`) redirect users before they encounter JavaScript
 2. **Custom emojis**: Use `:emoji-name.gif:` syntax (e.g., `:wave.gif:`)
    - Emoji files must be in `assets/images/emojis/`
    - Rendered via `process-emojis.html` partial
@@ -442,8 +442,8 @@ git submodule update --remote themes/hugo-bearblog
 1. **Minimal JavaScript philosophy**:
    - Avoid JavaScript where possible
    - Exception: Contact form uses Cloudflare Turnstile for spam protection
-   - `/javascript` page warns users before they encounter JavaScript-enabled pages
-   - Homepage links to `/javascript` which redirects to `/contact`
+   - `/javascript-*` pages warn users before they encounter JavaScript-enabled pages
+   - Homepage links to `/javascript-contact` which redirects to `/contact`
    - Cloudflare Workers handle form submissions (external to this repo)
 
 2. **Contact form**:

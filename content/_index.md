@@ -4,11 +4,11 @@ menu = "main"
 weight = 1
 +++
 #### about
-i make [things](/projects), a lot of them [on](https://catprinter.vercel.app) [the](https://github.com/dropalltables/hackathonstore) [web](https://sixdegreesofhackclub.vercel.app), though i don't publish much. i'm currently in [sf](https://en.wikipedia.org/wiki/San_Francisco) learning and building [cool stuff](/stuff) w/ cool people.
+i make [things](/projects), a lot of them [on](https://catprinter.vercel.app) [the](https://github.com/dropalltables/hackathonstore) [web](https://sixdegreesofhackclub.vercel.app), though i don't publish much. i'm currently in [sf](https://en.wikipedia.org/wiki/San_Francisco) learning and building [cool stuff](/javascript-stuff) w/ cool people.
 
 #### links
 - github - [dropalltables](https://github.com/dropalltables)
-- contact - [form](/javascript)
+- contact - [form](/javascript-contact)
 
 #### random
 - my username's [origin](https://xkcd.com/327/)
