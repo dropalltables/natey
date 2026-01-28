@@ -141,7 +141,7 @@ tags = ["tag1", "tag2", "tag3"]
 
 1. **Minimal JavaScript**: Site philosophy is to avoid JavaScript except where necessary for spam protection
    - Contact form uses Cloudflare Turnstile (requires JavaScript)
-   - Warning pages (`/javascript-contact`, `/javascript-stuff`, `/javascript-cdp`) redirect users before they encounter JavaScript
+   - Warning pages (`/javascript-contact`, `/javascript-stuff`) redirect users before they encounter JavaScript
 2. **Custom emojis**: Use `:emoji-name.gif:` syntax (e.g., `:wave.gif:`)
    - Emoji files must be in `assets/images/emojis/`
    - Rendered via `process-emojis.html` partial

@@ -9,6 +9,10 @@ weight = 50
 
 a web ui for a reverse engineered aliexpress thermal printer
 
+**[cdp](https://github.com/dropalltables/cdp)**
+
+deploy to coolify with one command
+
 **[hackathonstore](https://github.com/dropalltables/hackathonstore)**
 
 an inventory management system for hardware hackathons
