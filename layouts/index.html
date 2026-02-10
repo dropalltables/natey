@@ -57,6 +57,33 @@
 <script type="module">
   import { initEmbeddedCard } from '/card-app/init.js';
 
+  const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  const VIP_STORAGE_KEY = 'viruus-vip-badge';
+
+  function initKonami() {
+    let i = 0;
+    document.addEventListener('keydown', function handler(e) {
+      if (e.key === KONAMI[i]) {
+        i++;
+        if (i === KONAMI.length) {
+          document.removeEventListener('keydown', handler);
+          localStorage.setItem(VIP_STORAGE_KEY, '1');
+          const badge = document.querySelector('[data-vip-badge]');
+          const cardVisible = document.getElementById('homeCards')?.classList.contains('has-card');
+          if (badge) {
+            badge.classList.add('vip-badge--visible');
+            if (cardVisible) badge.classList.add('vip-badge--stamp');
+            badge.removeAttribute('aria-hidden');
+          }
+          window.posthog?.capture('membership_card_vip_unlocked');
+        }
+      } else {
+        i = 0;
+      }
+    });
+  }
+  initKonami();
+
   function hasValidSavedCard() {
     try {
       const raw = localStorage.getItem('viruus-membership-card');

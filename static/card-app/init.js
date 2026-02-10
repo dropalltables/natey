@@ -5,6 +5,7 @@ import { initTilt } from './js/tilt.js';
 import { initScaleForContainer } from './js/scale.js';
 
 const STORAGE_KEY = 'viruus-membership-card';
+const VIP_STORAGE_KEY = 'viruus-vip-badge';
 
 function isExpired(expStr) {
   const today = new Date().toISOString().slice(0, 10);
@@ -93,6 +94,12 @@ export function initEmbeddedCard(container) {
   if (saved) {
     applyData(saved.data);
     showCompletedCard(saved.firstName || 'Jane', saved.lastName || 'Doe', saved.signatureDataUrl);
+  }
+
+  const vipBadge = container.querySelector('[data-vip-badge]');
+  if (vipBadge && localStorage.getItem(VIP_STORAGE_KEY)) {
+    vipBadge.classList.add('vip-badge--visible');
+    vipBadge.removeAttribute('aria-hidden');
   }
 
   const data = saved?.data ?? buildCardData();
