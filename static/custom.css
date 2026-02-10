@@ -1,4 +1,13 @@
 @font-face {
+  font-family: 'Departure Mono';
+  src: url('/fonts/DepartureMono-Regular.woff2') format('woff2'),
+       url('/fonts/DepartureMono-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Berkeley Mono';
   src: url('/fonts/BerkeleyMono-Regular.woff2') format('woff2');
   font-weight: normal;
@@ -32,6 +41,7 @@
 
 :root {
   --font-mono: 'Berkeley Mono', monospace;
+  --font-link: 'Departure Mono', monospace;
 }
 
 time {
@@ -47,6 +57,7 @@ pre {
 }
 
 a {
+  font-family: var(--font-link);
   text-decoration: none;
 }
 

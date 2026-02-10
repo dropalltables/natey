@@ -1,0 +1,49 @@
+<div class="home-card-embed" id="homeCardEmbed">
+  <div class="card-wrapper" data-card-wrapper>
+    <div class="card-container" data-card-container>
+      <div class="card-bg"></div>
+
+      <div class="title">&asymp;Visitor ID&asymp;</div>
+
+      <div class="info-section">
+        <div class="background-bars">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+
+        <div class="info-content">
+          <div class="info-labels">ID#<br/>TIMEZONE<br/>EXP. DATE<br/>CREW ID<br/>CALLSIGN<br/>RANK<br/>OS<br/>RATING<br/></div>
+          <div class="info-values" data-card-info-values></div>
+        </div>
+      </div>
+
+      <div class="name-section">
+        <div class="name-row">
+          <div class="name-display" data-card-name-display></div>
+          <div class="dither-placeholder">
+            <canvas class="dither-canvas" data-card-dither width="150" height="150"></canvas>
+          </div>
+        </div>
+        <div class="organization" data-card-organization></div>
+      </div>
+
+      <div class="signature-box"></div>
+
+      <div class="footer-text">Identification card is unusable until signed with a valid signature.</div>
+    </div>
+
+    <div class="name-input-wrapper" data-card-name-wrapper>
+      <input type="text" class="name-input" data-card-first-name placeholder="first" maxlength="8" autocomplete="off" spellcheck="false">
+      <input type="text" class="name-input" data-card-last-name placeholder="last" maxlength="8" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="signature-overlay" data-card-signature>
+      <canvas width="2400" height="3600"></canvas>
+    </div>
+
+  </div>
+
+  <div class="hint-text" id="hintText" data-card-hint>press <code>ENTER</code> to complete</div>
+</div>

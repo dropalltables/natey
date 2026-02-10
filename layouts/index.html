@@ -1,3 +1,90 @@
+{{ define "extra_head" }}
+<link rel="stylesheet" href="/card-app/css/embed.css">
+{{ end }}
+
 {{ define "main" }}
-{{- partial "process-emojis.html" .Content -}}
+<div class="home-cards" id="homeCards">
+  <div class="home-cards__text">
+    {{- partial "process-emojis.html" .Content -}}
+  </div>
+  <div class="home-cards__card">
+    {{- partial "card_embed.html" . -}}
+  </div>
+</div>
+<style>
+  .home-cards {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    transition: gap 0.6s ease;
+  }
+  .home-cards.has-card {
+    gap: 2rem;
+  }
+  .home-cards__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    transition: flex 0.6s ease;
+  }
+  .home-cards.has-card .home-cards__text {
+    flex: 0 1 360px;
+  }
+  .home-cards__card {
+    flex: 0 0 0;
+    opacity: 0;
+    overflow: visible;
+    min-width: 0;
+    padding: 20px;
+    transition: flex 0.6s ease, opacity 0.6s ease 0.2s;
+  }
+  .home-cards.has-card .home-cards__card {
+    flex: 1 1 50%;
+    min-width: 0;
+    opacity: 1;
+  }
+  @media (max-width: 720px) {
+    .home-cards.has-card {
+      flex-direction: column;
+    }
+    .home-cards.has-card .home-cards__card {
+      max-width: none;
+    }
+  }
+</style>
+<script type="module">
+  import { initEmbeddedCard } from '/card-app/init.js';
+
+  function hasValidSavedCard() {
+    try {
+      const raw = localStorage.getItem('viruus-membership-card');
+      if (!raw) return false;
+      const saved = JSON.parse(raw);
+      return saved?.exp && saved.exp >= new Date().toISOString().slice(0, 10);
+    } catch {
+      return false;
+    }
+  }
+
+  function showCard() {
+    const container = document.getElementById('homeCards');
+    if (!container) return;
+    container.classList.add('has-card');
+    const cardEmbed = document.getElementById('homeCardEmbed');
+    if (cardEmbed && !cardEmbed.dataset.initialized) {
+      cardEmbed.dataset.initialized = 'true';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => initEmbeddedCard(cardEmbed));
+      });
+    }
+  }
+
+  if (hasValidSavedCard()) {
+    showCard();
+  }
+
+  document.querySelector('.cards-trigger')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    showCard();
+  });
+</script>
 {{ end }}
