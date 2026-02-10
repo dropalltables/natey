@@ -210,6 +210,9 @@ Client-side analytics via [PostHog](https://posthog.com/). Initialized in `layou
 - **`contact_field_focused`**: Fires when a contact form field gets focus (field_name)
 - **`contact_form_submitted`**: Fires on contact form submit (message_length, session_replay_url)
 - **`scroll_depth`**: Fires at 25/50/75/100% scroll milestones (depth, title, path, time_to_reach_seconds)
+- **`membership_card_revealed`**: Fires when card UI is shown (source: 'click' | 'saved')
+- **`membership_card_signature_started`**: Fires when user starts drawing on signature (first stroke)
+- **`membership_card_completed`**: Fires when user completes and saves card
 
 ### Auto-Captured by PostHog (do NOT duplicate)
 

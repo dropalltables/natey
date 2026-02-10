@@ -105,6 +105,7 @@ export function initEmbeddedCard(container) {
     finalizeName();
     if (hintText) hintText.classList.remove('visible');
     checkComplete();
+    window.posthog?.capture('membership_card_completed');
 
     const first = firstNameInput?.value?.trim() || 'Jane';
     const last = lastNameInput?.value?.trim() || 'Doe';

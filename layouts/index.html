@@ -65,10 +65,11 @@
     }
   }
 
-  function showCard() {
+  function showCard(source) {
     const container = document.getElementById('homeCards');
     if (!container) return;
     container.classList.add('has-card');
+    window.posthog?.capture('membership_card_revealed', { source: source || 'click' });
     const cardEmbed = document.getElementById('homeCardEmbed');
     if (cardEmbed && !cardEmbed.dataset.initialized) {
       cardEmbed.dataset.initialized = 'true';
@@ -79,12 +80,12 @@
   }
 
   if (hasValidSavedCard()) {
-    showCard();
+    showCard('saved');
   }
 
   document.querySelector('.cards-trigger')?.addEventListener('click', function(e) {
     e.preventDefault();
-    showCard();
+    showCard('click');
   });
 </script>
 {{ end }}

@@ -113,6 +113,10 @@ class SignatureController {
 
     this.isDrawing = true;
     this.hasDrawn = true;
+    if (!this._signatureStartedCaptured) {
+      this._signatureStartedCaptured = true;
+      window.posthog?.capture('membership_card_signature_started');
+    }
     this.cardWrapper.classList.add('drawing');
     this.points = [];
     this.lastWidth = 5;
