@@ -7,10 +7,10 @@ Guide for AI agents working in the viruus.zip repository - a personal website an
 This is a static website built with [Hugo](https://gohugo.io/) using the [hugo-bearblog](https://github.com/janraasch/hugo-bearblog/) theme. The site features:
 
 - Personal blog with automated email distribution via Resend
-- Minimal JavaScript philosophy (only used for Cloudflare Turnstile spam protection on contact form)
 - Custom Berkeley Mono font
 - Custom emoji rendering system
-- Deployed to Cloudflare Pages with server-side analytics via Pages Functions
+- Deployed to Cloudflare Pages (auto-configured via dashboard)
+- Client-side analytics via PostHog (session recording, heatmaps, autocapture, error tracking)
 - GitHub Actions for email automation
 
 **Base URL**: https://viruus.zip  
@@ -80,7 +80,8 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 │   │   ├── baseof.html  # Base template
 │   │   └── single.html  # Single page/post template
 │   ├── partials/
-│   │   ├── custom_head.html      # Custom CSS link
+│   │   ├── custom_head.html      # Custom CSS + PostHog init
+│   │   ├── custom_body.html      # PostHog custom events
 │   │   └── process-emojis.html   # Emoji rendering partial
 │   ├── index.html       # Homepage template
 │   └── 404.html         # 404 page
@@ -94,14 +95,10 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 │       └── emojis/      # Custom emoji images
 ├── themes/
 │   └── hugo-bearblog/   # Theme submodule
-├── functions/           # Cloudflare Pages Functions
-│   ├── _middleware.ts   # Server-side analytics (runs on every request)
-│   └── tsconfig.json    # TypeScript config for functions
 ├── .github/
 │   └── workflows/
 │       └── send-email.yml  # Email automation
 ├── hugo.toml            # Site configuration
-├── wrangler.toml        # Cloudflare Pages config
 └── datedooter.sh        # Timestamp update utility
 ```
 
@@ -189,67 +186,54 @@ The site uses hugo-bearblog theme as a base but overrides:
 - `layouts/_default/baseof.html` - Custom base template
 - Custom CSS for typography and link styling
 
-## Server-Side Analytics
+## Analytics (PostHog)
 
 ### Overview
 
-Privacy-respecting, server-side analytics using Cloudflare Pages Functions. **No client-side JavaScript** - works even with JS disabled.
+Client-side analytics via [PostHog](https://posthog.com/). Initialized in `layouts/partials/custom_head.html`, custom events in `layouts/partials/custom_body.html`.
 
-### How It Works
+### PostHog Init Config
 
-The `functions/_middleware.ts` runs on every request and:
-1. Filters to only track HTML page views (not assets, bots, etc.)
-2. Extracts referrer and categorizes source (search, social, dev, direct, other)
-3. Captures page path, from-path (for internal navigation), country
-4. Logs to Cloudflare Analytics Engine
+- **Person profiles**: `always` (creates profiles for all visitors)
+- **Autocapture**: Enabled with `capture_copied_text`
+- **Pageview/pageleave**: Auto-captured
+- **Performance**: Web vitals + network timing
+- **Session recording**: Enabled with cross-origin iframe support and console log capture
+- **Heatmaps**: Enabled (`capture_heatmaps`)
+- **Dead click detection**: Enabled
+- **Exception capture**: Unhandled errors and rejections
+- **Scroll tracking**: Enabled on `main` element
+- **Campaign/referrer**: Auto-saved by PostHog
 
-### Data Captured
+### Custom Events (custom_body.html)
 
-- **path**: Current page URL path
-- **source**: Categorized referrer (google, github, twitter, direct, etc.)
-- **refHost**: Referring hostname
-- **fromPath**: Previous page path (internal navigation only)
-- **country**: Visitor country from CF geo
-- **UTM params**: utm_source, utm_medium, utm_campaign if present
+- **`contact_field_focused`**: Fires when a contact form field gets focus (field_name)
+- **`contact_form_submitted`**: Fires on contact form submit (message_length, session_replay_url)
+- **`scroll_depth`**: Fires at 25/50/75/100% scroll milestones (depth, title, path, time_to_reach_seconds)
 
-### Referrer Categories
+### Auto-Captured by PostHog (do NOT duplicate)
 
-- **search**: Google, Bing, DuckDuckGo, Brave, Kagi, etc.
-- **social**: Twitter/X, Facebook, LinkedIn, Instagram, Threads, Bluesky, Mastodon
-- **dev**: GitHub, Hacker News, Lobsters, Reddit, Dev.to, Stack Overflow
-- **direct**: No referrer
-- **internal**: Navigation within viruus.zip
-- **other**: Any other referrer
+PostHog automatically captures these — do not add custom tracking for them:
+- Timezone (`$timezone`), language (`$browser_language`), screen size (`$screen_width`/`$screen_height`)
+- Viewport (`$viewport_width`/`$viewport_height`), referrer (`$referrer`/`$referring_domain`)
+- UTM params, initial referrer/landing page (`$initial_*` properties)
+- Person first/last seen timestamps
+- Page time on site (from `$pageview`/`$pageleave` timestamps)
+- Text copy events (`$copy_autocapture` via `capture_copied_text`)
+- Link clicks (autocapture on `<a>` tags with `attr__href`)
+- Feature flag evaluations (`$feature_flag_called`)
+- Groups and cohorts (managed in PostHog dashboard)
 
-### Querying Stats
+### Custom Registered Properties
 
-Access via Cloudflare Analytics Engine dashboard or GraphQL API. Example queries:
+- **`connection_type`**: Network connection type (registered on every event)
+- **`first_visit_at`**: ISO timestamp set once via `register_once`
 
-```sql
--- Top sources
-SELECT blob1 AS source, SUM(double1) AS views 
-FROM viruus_analytics GROUP BY source ORDER BY views DESC
+### User Identification
 
--- Top pages  
-SELECT index1 AS path, SUM(double1) AS views
-FROM viruus_analytics GROUP BY path ORDER BY views DESC
-
--- Top external referrers
-SELECT blob2 AS referrer, SUM(double1) AS views
-FROM viruus_analytics WHERE blob2 != '' GROUP BY referrer ORDER BY views DESC
-
--- Internal navigation patterns
-SELECT blob3 AS from_path, index1 AS to_path, SUM(double1) AS count
-FROM viruus_analytics WHERE blob3 != '' GROUP BY from_path, to_path ORDER BY count DESC
-```
-
-### Viewing Stats
-
-All data is accessible via Cloudflare's native tools:
-
-1. **Real-time logs**: CF Dashboard → Pages → Your Project → Functions → Logs
-2. **Analytics Engine queries**: CF Dashboard → Analytics & Logs → Analytics Engine
-3. **GraphQL API**: Query `viruus_analytics` dataset programmatically
+On contact form submission, `posthog.identify()` is called with the user's email, setting:
+- `$set`: name, email
+- `$set_once`: first_contact_at
 
 ## Email Automation System
 
@@ -315,21 +299,17 @@ The workflow intelligently handles different scenarios:
 
 ## Deployment
 
-Deployed to **Cloudflare Pages** (not Vercel).
+Deployed to **Cloudflare Pages** (auto-configured via dashboard, no wrangler.toml).
 
 - **Build command**: `hugo`
 - **Output directory**: `public/`
 - **Domain**: viruus.zip
-- **Functions**: `functions/` directory contains Pages Functions
 
 ### Cloudflare Pages Setup
 
 1. Connect repo to Cloudflare Pages
 2. Set build command: `hugo`
 3. Set output directory: `public/`
-4. Add Analytics Engine binding in Pages settings:
-   - Variable name: `ANALYTICS`
-   - Dataset: `viruus_analytics`
 
 ### Git Workflow
 
@@ -355,7 +335,7 @@ git submodule update --remote themes/hugo-bearblog
    - Update timestamp: `./datedooter.sh my-post`
 5. Commit and push to `main`
 6. GitHub Action will send email to production segment
-7. Vercel will deploy updated site
+7. Cloudflare Pages will deploy updated site
 
 ### Testing Email Before Publishing
 
@@ -440,10 +420,10 @@ git submodule update --remote themes/hugo-bearblog
 ### Content
 
 1. **Minimal JavaScript philosophy**:
-   - Avoid JavaScript where possible
-   - Exception: Contact form uses Cloudflare Turnstile for spam protection
-   - `/javascript-*` pages warn users before they encounter JavaScript-enabled pages
-   - Homepage links to `/javascript-contact` which redirects to `/contact`
+   - Site philosophy is to avoid JavaScript except where necessary for spam protection
+   - Contact form uses Cloudflare Turnstile (requires JavaScript)
+   - Warning pages (`/javascript-contact`, `/javascript-stuff`) redirect users before they encounter JavaScript
+   - PostHog analytics loaded on all pages via `custom_head.html`
    - Cloudflare Workers handle form submissions (external to this repo)
 
 2. **Contact form**:
