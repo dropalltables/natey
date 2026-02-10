@@ -96,8 +96,10 @@ export function initEmbeddedCard(container) {
     showCompletedCard(saved.firstName || 'Jane', saved.lastName || 'Doe', saved.signatureDataUrl);
   }
 
+  const hasVip = !!(saved?.vip ?? localStorage.getItem(VIP_STORAGE_KEY));
+  if (hasVip) localStorage.setItem(VIP_STORAGE_KEY, '1');
   const vipBadge = container.querySelector('[data-vip-badge]');
-  if (vipBadge && localStorage.getItem(VIP_STORAGE_KEY)) {
+  if (vipBadge && hasVip) {
     vipBadge.classList.add('vip-badge--visible');
     vipBadge.removeAttribute('aria-hidden');
   }
@@ -123,7 +125,8 @@ export function initEmbeddedCard(container) {
       data,
       firstName: first,
       lastName: last,
-      signatureDataUrl
+      signatureDataUrl,
+      vip: !!localStorage.getItem(VIP_STORAGE_KEY)
     });
   }
 
