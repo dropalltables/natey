@@ -8,8 +8,7 @@ const STORAGE_KEY = 'viruus-membership-card';
 const VIP_STORAGE_KEY = 'viruus-vip-badge';
 
 function isExpired(expStr) {
-  const today = new Date().toISOString().slice(0, 10);
-  return expStr < today;
+  return expStr < new Date().toISOString().slice(0, 10);
 }
 
 function loadSavedCard() {
@@ -57,6 +56,28 @@ export function initEmbeddedCard(container) {
 
   let nameFinalized = false;
   let signatureFinalized = false;
+  let entranceDone = false;
+  let pendingEnable = false;
+
+  function enableTilt() {
+    if (entranceDone) {
+      tilt.enable();
+    } else {
+      pendingEnable = true;
+    }
+  }
+
+  requestAnimationFrame(() => container.classList.add('card-entered'));
+
+  cardWrapper.addEventListener('animationend', () => {
+    cardWrapper.style.animation = 'none';
+    cardWrapper.style.opacity = '1';
+    cardWrapper.style.transform =
+      'translateY(0px) scale(1) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+    if (nameInputWrapper) nameInputWrapper.classList.add('entrance-done');
+    entranceDone = true;
+    if (pendingEnable) tilt.enable();
+  }, { once: true });
 
   const saved = loadSavedCard();
 
@@ -71,24 +92,19 @@ export function initEmbeddedCard(container) {
       nameDisplay.innerHTML = `${firstName}<br/>${lastName}`;
       nameDisplay.classList.add('finalized');
     }
-    if (nameInputWrapper) {
-      nameInputWrapper.classList.add('finalized');
-    }
+    if (nameInputWrapper) nameInputWrapper.classList.add('finalized');
     if (signatureDataUrl) {
       signatureOverlay?.classList.add('signed');
       const canvas = signatureOverlay?.querySelector('canvas');
       if (canvas) {
         const img = new Image();
-        img.onload = () => {
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-        };
+        img.onload = () => canvas.getContext('2d').drawImage(img, 0, 0);
         img.src = signatureDataUrl;
       }
     }
     nameFinalized = true;
     signatureFinalized = true;
-    tilt.enable();
+    enableTilt();
   }
 
   if (saved) {
@@ -105,8 +121,23 @@ export function initEmbeddedCard(container) {
   }
 
   const data = saved?.data ?? buildCardData();
-  if (!saved) {
-    applyData(data);
+  if (!saved) applyData(data);
+
+  function checkComplete() {
+    if (nameFinalized && signatureFinalized) enableTilt();
+  }
+
+  function finalizeName() {
+    if (nameFinalized) return;
+    const first = firstNameInput?.value?.trim() || 'Jane';
+    const last = lastNameInput?.value?.trim() || 'Doe';
+    if (nameDisplay) {
+      nameDisplay.innerHTML = `${first}<br/>${last}`;
+      nameDisplay.classList.add('finalized');
+    }
+    if (nameInputWrapper) nameInputWrapper.classList.add('finalized');
+    nameFinalized = true;
+    checkComplete();
   }
 
   function onComplete() {
@@ -135,34 +166,10 @@ export function initEmbeddedCard(container) {
       createAnimatedDitheringPattern(canvas, frame, container)
   };
   const sig = new SignatureController(
-    signatureOverlay,
-    cardWrapper,
-    ditherCanvas,
-    ditherModule,
-    onComplete,
-    tilt
+    signatureOverlay, cardWrapper, ditherCanvas, ditherModule, onComplete, tilt
   );
 
   sig.startDither();
-
-  function checkComplete() {
-    if (nameFinalized && signatureFinalized) {
-      tilt.enable();
-    }
-  }
-
-  function finalizeName() {
-    if (nameFinalized) return;
-    const first = firstNameInput?.value?.trim() || 'Jane';
-    const last = lastNameInput?.value?.trim() || 'Doe';
-    if (nameDisplay) {
-      nameDisplay.innerHTML = `${first}<br/>${last}`;
-      nameDisplay.classList.add('finalized');
-    }
-    if (nameInputWrapper) nameInputWrapper.classList.add('finalized');
-    nameFinalized = true;
-    checkComplete();
-  }
 
   if (!saved) {
     signatureOverlay.addEventListener('mousedown', finalizeName, { once: true });

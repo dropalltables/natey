@@ -49,6 +49,12 @@
   transform-style: preserve-3d;
   filter: drop-shadow(0 0px 0px rgba(0, 0, 0, 0));
   overflow: visible;
+  opacity: 0;
+  transform: translateY(40px) scale(0.92);
+}
+
+.home-card-embed.card-entered .card-wrapper {
+  animation: card-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .home-card-embed .card-container {
@@ -286,6 +292,18 @@
   transition: opacity 0.6s ease;
 }
 
+.home-card-embed .footer-text {
+  font-size: calc(16px * var(--scale));
+  line-height: calc(20px * var(--scale));
+  width: calc(440px * var(--scale));
+  position: absolute;
+  color: var(--card-text);
+  font-family: 'Departure Mono', 'DepartureMono-Regular', monospace;
+  left: 0;
+  top: 0;
+  translate: calc(66px * var(--scale)) calc(910px * var(--scale));
+}
+
 .home-card-embed .hint-text {
   position: absolute;
   bottom: 20px;
@@ -366,22 +384,96 @@
   }
 }
 
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes card-content-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.home-card-embed.card-entered .title {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.3s forwards;
+}
+
+.home-card-embed.card-entered .info-section {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.45s forwards;
+}
+
+.home-card-embed.card-entered .name-section {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.55s forwards;
+}
+
+.home-card-embed.card-entered .name-input-wrapper {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.55s forwards;
+  transition: none;
+}
+
+.home-card-embed.card-entered .name-input-wrapper.finalized {
+  animation: none;
+  opacity: 0;
+}
+
+.home-card-embed .name-input-wrapper.entrance-done {
+  transition: opacity 0.5s ease;
+}
+
+.home-card-embed.card-entered .signature-overlay {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.6s forwards;
+}
+
+.home-card-embed.card-entered .signature-box {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.65s forwards;
+}
+
+.home-card-embed.card-entered .footer-text {
+  opacity: 0;
+  animation: card-content-enter 0.5s ease-out 0.75s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-card-embed .card-wrapper {
+    opacity: 1;
+    transform: none;
+  }
+  .home-card-embed.card-entered .card-wrapper,
+  .home-card-embed.card-entered .title,
+  .home-card-embed.card-entered .info-section,
+  .home-card-embed.card-entered .name-section,
+  .home-card-embed.card-entered .name-input-wrapper,
+  .home-card-embed.card-entered .signature-overlay,
+  .home-card-embed.card-entered .signature-box,
+  .home-card-embed.card-entered .footer-text {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .home-card-embed .card-wrapper.signing .card-container {
   pointer-events: none;
 }
 
 .home-card-embed .card-wrapper.drawing .name-input-wrapper {
   pointer-events: none;
-}
-
-.home-card-embed .footer-text {
-  font-size: calc(16px * var(--scale));
-  line-height: calc(20px * var(--scale));
-  width: calc(440px * var(--scale));
-  position: absolute;
-  color: var(--card-text);
-  font-family: 'Departure Mono', 'DepartureMono-Regular', monospace;
-  left: 0;
-  top: 0;
-  translate: calc(66px * var(--scale)) calc(910px * var(--scale));
 }

@@ -119,7 +119,8 @@ function initTilt(cardWrapper, cardContainer) {
   function setBase(ty, s) {
     baseTranslateY = ty;
     baseScale = s;
-    cardWrapper.style.transform = `translateY(${ty}px) scale(${s})`;
+    cardWrapper.style.transform =
+      `translateY(${ty}px) scale(${s}) rotateX(${currentRotateX}deg) rotateY(${currentRotateY}deg) translateZ(${currentTranslateZ}px)`;
   }
 
   return { enable, setBase };

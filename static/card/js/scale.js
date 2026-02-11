@@ -1,22 +1,5 @@
-function initScale() {
-  const BASE_W = 637.5;
-  const BASE_H = 1012.5;
-
-  function update() {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const scaleW = vw / BASE_W;
-    const scaleH = vh / BASE_H;
-    const scale = Math.min(scaleW, scaleH) * 0.95;
-    document.documentElement.style.setProperty('--scale', scale);
-  }
-
-  update();
-  window.addEventListener('resize', update);
-}
-
 function initScaleForContainer(container) {
-  if (!container) return initScale();
+  if (!container) return;
 
   const BASE_W = 637.5;
   const BASE_H = 1012.5;
@@ -43,4 +26,4 @@ function initScaleForContainer(container) {
   window.addEventListener('resize', update);
 }
 
-export { initScale, initScaleForContainer };
+export { initScaleForContainer };
