@@ -11,7 +11,7 @@ brew install hugo
 
 2. Clone this repository with submodules:
 ```bash
-git clone --recurse-submodules <repo-url>
+git clone --recurse-submodules https://github.com/dropalltables/viruus.git
 ```
 
 ## Development
