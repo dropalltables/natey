@@ -72,7 +72,6 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 │   ├── blog/            # Blog posts
 │   ├── _index.md        # Homepage content
 │   ├── contact.md       # Contact form (with Cloudflare Turnstile)
-│   ├── javascript.md    # JavaScript warning page for contact form
 │   ├── projects.md      # Projects page
 │   └── stuff.md         # Stuff page
 ├── layouts/             # Custom layout overrides
@@ -80,13 +79,13 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 │   │   ├── baseof.html  # Base template
 │   │   └── single.html  # Single page/post template
 │   ├── partials/
-│   │   ├── custom_head.html      # Custom CSS + PostHog init
+│   │   ├── custom_head.html      # Google Fonts + PostHog init
 │   │   ├── custom_body.html      # PostHog custom events
-│   │   └── process-emojis.html   # Emoji rendering partial
+│   │   ├── process-emojis.html   # Emoji rendering partial
+│   │   └── style.html            # Merged theme + custom styles (overrides theme)
 │   ├── index.html       # Homepage template
 │   └── 404.html         # 404 page
 ├── static/              # Static assets (served as-is)
-│   ├── custom.css       # Custom styles
 │   ├── fonts/           # Berkeley Mono font files
 │   ├── images/          # Site images
 │   └── favicon.ico
@@ -136,9 +135,9 @@ tags = ["tag1", "tag2", "tag3"]
 
 ### Content Conventions
 
-1. **Minimal JavaScript**: Site philosophy is to avoid JavaScript except where necessary for spam protection
+1. **Minimal JavaScript**: Site philosophy is to avoid JavaScript except where necessary for spam protection and form handling
    - Contact form uses Cloudflare Turnstile (requires JavaScript)
-   - Warning pages (`/javascript-contact`, `/javascript-stuff`) redirect users before they encounter JavaScript
+   - Forms use `fetch()` with inline JavaScript for submission, with success/error feedback shown on the page
 2. **Custom emojis**: Use `:emoji-name.gif:` syntax (e.g., `:wave.gif:`)
    - Emoji files must be in `assets/images/emojis/`
    - Rendered via `process-emojis.html` partial
@@ -159,14 +158,14 @@ weight = 10       # Menu ordering (lower = earlier)
 
 ## Styling and Design
 
-### Custom CSS
+### Styles
 
-- File: `static/custom.css`
-- Loaded via `layouts/partials/custom_head.html`
+- File: `layouts/partials/style.html` (merged theme styles + custom styles into one partial that overrides the theme's `style.html`)
 - Defines Berkeley Mono font faces (Regular, Bold, Oblique, Bold-Oblique)
 - Custom link hover behavior (inverts colors - background becomes link color)
 - Applied to `time`, `code`, and `pre` elements
 - Form layout styles (display: block for inputs, textarea, button, Turnstile widget)
+- Inline form validation styles (border color changes, red-tinted background for invalid fields, hint text)
 
 ### Font Setup
 
@@ -184,7 +183,7 @@ The site uses hugo-bearblog theme as a base but overrides:
 - `layouts/index.html` - Custom homepage (uses process-emojis partial)
 - `layouts/_default/single.html` - Custom single post layout with emoji support
 - `layouts/_default/baseof.html` - Custom base template
-- Custom CSS for typography and link styling
+- `layouts/partials/style.html` - Merged theme + custom styles
 
 ## Analytics (PostHog)
 
@@ -354,13 +353,13 @@ git submodule update --remote themes/hugo-bearblog
 
 1. Add emoji image to `assets/images/emojis/` (e.g., `wave.gif`)
 2. Use in content: `:wave.gif:`
-3. Hugo will render as: `<img src="/images/emojis/wave.gif" alt="wave.gif" class="emoji">` (styling via `.emoji` class in `custom.css`)
+3. Hugo will render as: `<img src="/images/emojis/wave.gif" alt="wave.gif" class="emoji">` (styling via `.emoji` class in `style.html`)
 
 ### Updating Styles
 
-1. Edit `static/custom.css`
-2. Changes apply immediately (static file)
-3. No build step needed for CSS
+1. Edit `layouts/partials/style.html`
+2. Changes apply on next build or live reload
+3. This file overrides the theme's `style.html` partial
 
 ### Modifying Layouts
 
@@ -423,19 +422,20 @@ git submodule update --remote themes/hugo-bearblog
 ### Content
 
 1. **Minimal JavaScript philosophy**:
-   - Site philosophy is to avoid JavaScript except where necessary for spam protection
+   - Site philosophy is to avoid JavaScript except where necessary for spam protection and form handling
    - Contact form uses Cloudflare Turnstile (requires JavaScript)
-   - Warning pages (`/javascript-contact`, `/javascript-stuff`) redirect users before they encounter JavaScript
+   - Forms use `fetch()` with inline JavaScript for submission, with success/error feedback shown on the page
+   - Forms have inline validation with debounced input validation, immediate blur validation, and visual feedback (border color changes, red-tinted background for invalid fields, hint text to the right of fields)
    - PostHog analytics loaded on all pages via `custom_head.html`
    - Cloudflare Workers handle form submissions (external to this repo)
 
 2. **Contact form**:
    - Uses Cloudflare Turnstile widget (`data-sitekey="0x4AAAAAACCIH6LE-pwfc-u6"`)
    - Loads Turnstile script: `https://challenges.cloudflare.com/turnstile/v0/api.js`
-   - Submits to `https://resender.viruus.zip/contact`
-   - Hidden iframe prevents redirect after submission
+   - Submits to `https://resender.viruus.zip/contact` via `fetch()`
+   - Success/error feedback shown inline on the page
    - Form fields: name, email, message
-   - CSS ensures form elements display as block
+   - Inline validation with debounced input validation, immediate blur validation, and visual feedback
 
 3. **Emoji syntax**:
    - Must include file extension: `:wave.gif:` not `:wave:`
@@ -469,7 +469,7 @@ git submodule update --remote themes/hugo-bearblog
 ## File Patterns to Recognize
 
 - **Blog posts**: `content/blog/*.md` (excluding `_index.md`)
-- **Pages**: `content/*.md` (including `contact.md` and `javascript.md`)
+- **Pages**: `content/*.md` (including `contact.md`)
 - **Images**: `static/images/**` (served as-is)
 - **Emojis**: `assets/images/emojis/**` (processed)
 - **Fonts**: `static/fonts/*.woff2`

@@ -8,19 +8,130 @@ title = "contact me"
 
 for some reason a lot of people [have been sending me requests](/feefts) for prices. i do not know for what, or why. all of the people have one word names, ending in feeft. to all the feefts: **please stop.** im begging you.
 
-<form action="https://resender.viruus.zip/contact" method="POST" target="hidden_iframe">
-  <input type="text" name="name" placeholder="your name" required>
-  <input type="email" name="email" placeholder="your@email.com" required>
-  <textarea name="message" placeholder="your message" rows="4" required></textarea>
+<form id="contact-form" action="https://resender.viruus.zip/contact" method="POST" novalidate>
+  <div class="field">
+    <input type="text" name="name" placeholder="your name" required>
+    <span class="field-hint" id="name-hint"></span>
+  </div>
+  <div class="field">
+    <input type="email" name="email" placeholder="your@email.com" required>
+    <span class="field-hint" id="email-hint"></span>
+  </div>
+  <div class="field">
+    <textarea name="message" placeholder="your message" rows="4" required></textarea>
+    <span class="field-hint" id="message-hint"></span>
+  </div>
   <div class="cf-turnstile" data-sitekey="0x4AAAAAACCIH6LE-pwfc-u6"></div>
   <button type="submit" id="contact-submit" disabled>send message</button>
 </form>
 
+<p id="form-status"></p>
+
 <script>
-document.getElementById('contact-submit').disabled = false;
+(function() {
+  var timers = {};
+  var touched = {};
+
+  function debounce(id, fn, ms) {
+    clearTimeout(timers[id]);
+    timers[id] = setTimeout(fn, ms || 400);
+  }
+
+  function validate(el) {
+    var name = el.name;
+    var val = el.value.trim();
+    var hint = document.getElementById(name + '-hint');
+    if (!hint) return;
+
+    if (!touched[name]) {
+      el.classList.remove('valid', 'invalid');
+      hint.textContent = '\u00a0';
+      hint.className = 'field-hint';
+      return;
+    }
+
+    if (!val) {
+      el.classList.remove('valid');
+      el.classList.add('invalid');
+      hint.textContent = name + ' is required';
+      hint.className = 'field-hint error';
+      return;
+    }
+
+    if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      el.classList.remove('valid');
+      el.classList.add('invalid');
+      hint.textContent = 'not a valid email';
+      hint.className = 'field-hint error';
+      return;
+    }
+
+    el.classList.remove('invalid');
+    el.classList.add('valid');
+    hint.textContent = '\u00a0';
+    hint.className = 'field-hint ok';
+  }
+
+  var form = document.getElementById('contact-form');
+  var btn = document.getElementById('contact-submit');
+  btn.disabled = false;
+
+  form.addEventListener('input', function(e) {
+    var el = e.target;
+    if (!el.name || !document.getElementById(el.name + '-hint')) return;
+    touched[el.name] = true;
+    if (el.classList.contains('invalid')) {
+      validate(el);
+    } else {
+      debounce(el.name, function() { validate(el); });
+    }
+  });
+
+  form.addEventListener('blur', function(e) {
+    var el = e.target;
+    if (!el.name || !document.getElementById(el.name + '-hint')) return;
+    clearTimeout(timers[el.name]);
+    if (el.value.trim()) touched[el.name] = true;
+    validate(el);
+  }, true);
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var fields = form.querySelectorAll('input:not([type=hidden]), textarea');
+    var ok = true;
+    for (var i = 0; i < fields.length; i++) {
+      touched[fields[i].name] = true;
+      validate(fields[i]);
+      if (fields[i].classList.contains('invalid')) ok = false;
+    }
+    if (!ok) return;
+
+    var status = document.getElementById('form-status');
+    btn.disabled = true;
+    btn.textContent = 'sending...';
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form)
+    }).then(function(res) {
+      if (res.ok) {
+        status.textContent = 'sent!';
+        form.reset();
+        touched = {};
+        fields.forEach(function(f) {
+          f.classList.remove('valid', 'invalid');
+          var h = document.getElementById(f.name + '-hint');
+          if (h) { h.textContent = '\u00a0'; h.className = 'field-hint'; }
+        });
+        if (window.turnstile) turnstile.reset();
+      } else {
+        status.textContent = 'something went wrong. try again?';
+      }
+    }).catch(function() {
+      status.textContent = 'something went wrong. try again?';
+    }).finally(function() {
+      btn.disabled = false;
+      btn.textContent = 'send message';
+    });
+  });
+})();
 </script>
-<iframe name="hidden_iframe" class="hidden-iframe"></iframe>
-<br>
-<noscript>
-<strong>this contact form requires javascript for cloudflare turnstile spam protection.</strong> sorry :(
-</noscript>

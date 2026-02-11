@@ -1,26 +1,76 @@
 <style>
+  /* === Base (from hugo-bearblog) === */
   :root {
     --width: 720px;
-    --font-main: 'Inter', sans-serif;
-    --font-secondary: 'Inter', sans-serif;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
     --font-scale: 1em;
-    --background-color: #f8f7f4;
-    --heading-color: #262626;
-    --text-color: #3C3C3C;
-    --link-color: #FF7F11;
-    --visited-color: #ACBFA4;
-    --blockquote-color: #262626;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --blockquote-color: #222;
+    --font-mono: 'Berkeley Mono', monospace;
+    --font-link: 'Departure Mono', monospace;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background-color: #262626;
-      --heading-color: #E2E8CE;
-      --text-color: #E2E8CE;
-      --link-color: #FF7F11;
-      --visited-color: #ACBFA4;
-      --blockquote-color: #E2E8CE;
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --blockquote-color: #ccc;
     }
+  }
+
+  /* === Fonts === */
+  @font-face {
+    font-family: 'Departure Mono';
+    src: url('/fonts/DepartureMono-Regular.woff2') format('woff2'),
+         url('/fonts/DepartureMono-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Berkeley Mono';
+    src: url('/fonts/BerkeleyMono-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Berkeley Mono';
+    src: url('/fonts/BerkeleyMono-Bold.woff2') format('woff2');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Berkeley Mono';
+    src: url('/fonts/BerkeleyMono-Oblique.woff2') format('woff2');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Berkeley Mono';
+    src: url('/fonts/BerkeleyMono-Bold-Oblique.woff2') format('woff2');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+  }
+
+  /* === Layout === */
+  html {
+    background-color: var(--background-color);
   }
 
   body {
@@ -37,48 +87,65 @@
     color: var(--text-color);
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  main {
+    line-height: 1.6;
+  }
+
+  /* === Typography === */
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-main);
     color: var(--heading-color);
   }
 
+  strong, b {
+    color: var(--heading-color);
+  }
+
+  time {
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  code {
+    font-family: var(--font-mono);
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  pre {
+    font-family: var(--font-mono);
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  /* === Links === */
   a {
+    font-family: var(--font-link);
     color: var(--link-color);
     cursor: pointer;
     text-decoration: none;
   }
 
   a:hover {
-    text-decoration: underline;
+    color: var(--background-color);
+    background-color: var(--link-color);
+    text-decoration: none;
   }
 
   nav a {
     margin-right: 8px;
   }
 
-  strong,
-  b {
-    color: var(--heading-color);
-  }
-
+  /* === Elements === */
   button {
     margin: 0;
     cursor: pointer;
-  }
-
-  time {
-    font-family: monospace;
-    font-style: normal;
-    font-size: 15px;
-  }
-
-  main {
-    line-height: 1.6;
   }
 
   table {
@@ -94,24 +161,12 @@
     max-width: 100%;
   }
 
-  code {
-    font-family: monospace;
-    padding: 2px;
-    border-radius: 3px;
-  }
-
-  blockquote {
-    border-left: 1px solid #999;
-    color: var(--blockquote-color);
-    padding-left: 20px;
-    font-style: italic;
-  }
-
   footer {
     padding: 25px 0;
     text-align: center;
   }
 
+  /* === Theme components === */
   .title:hover {
     text-decoration: none;
   }
@@ -124,14 +179,14 @@
     width: auto !important;
   }
 
-  .highlight,
-  .code {
+  .highlight, .code {
     border-radius: 3px;
     margin-block-start: 1em;
     margin-block-end: 1em;
     overflow-x: auto;
   }
 
+  /* === Blog post list === */
   ul.blog-posts {
     list-style-type: none;
     padding: unset;
@@ -147,5 +202,196 @@
 
   ul.blog-posts li a:visited {
     color: var(--visited-color);
+  }
+
+  ul.blog-posts li .post-description {
+    opacity: 0.65;
+  }
+
+  ul.blog-posts li .post-description::before {
+    content: " — ";
+  }
+
+  ul.blog-posts li .post-line {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* === Forms === */
+  form input,
+  form textarea,
+  form button,
+  form .cf-turnstile {
+    display: block;
+  }
+
+  form input,
+  form textarea {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    font-family: var(--font-link);
+    font-size: 0.85em;
+    color: var(--text-color);
+    background-color: #E2E8CE;
+    border: 2px solid #ACBFA4;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    outline: none;
+    overscroll-behavior: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  form input::placeholder,
+  form textarea::placeholder {
+    color: #26262680;
+  }
+
+  form .field {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  form .field input,
+  form .field textarea {
+    margin-bottom: 0;
+  }
+
+  form .field-hint {
+    font-family: var(--font-link);
+    font-size: 0.75em;
+    white-space: nowrap;
+    color: transparent;
+  }
+
+  form .field-hint.error {
+    color: #b44;
+  }
+
+  form .field-hint.ok {
+    color: #5a8a5a;
+  }
+
+  form input:focus,
+  form textarea:focus {
+    border-color: #8aaa7e;
+    box-shadow: 0 0 0 2px #acbfa440;
+  }
+
+  form input.valid,
+  form textarea.valid {
+    border-color: #5a8a5a;
+  }
+
+  form input.invalid,
+  form textarea.invalid {
+    border-color: #b44;
+    background-color: #e8d8d4;
+  }
+
+  form input.invalid:focus,
+  form textarea.invalid:focus {
+    border-color: #b44;
+    box-shadow: 0 0 0 2px #b4444440;
+  }
+
+  form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  form button {
+    padding: 4px 6px;
+    font-family: var(--font-link);
+    font-size: 0.85em;
+    color: #262626;
+    background-color: #E2E8CE;
+    border: 2px solid #ACBFA4;
+    border-radius: 4px;
+    box-shadow: 2px 2px 0 #ACBFA4;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+
+  form button:hover {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  form button:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  form button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* === Dark mode overrides === */
+  @media (prefers-color-scheme: dark) {
+    form input,
+    form textarea {
+      background-color: #2a3a2a;
+      border-color: #4a5e4a;
+      color: var(--text-color);
+    }
+
+    form input::placeholder,
+    form textarea::placeholder {
+      color: #ffffff50;
+    }
+
+    form input:focus,
+    form textarea:focus {
+      border-color: #6a8a6a;
+      box-shadow: 0 0 0 2px #4a5e4a40;
+    }
+
+    form button {
+      background-color: #2a3a2a;
+      border-color: #4a5e4a;
+      color: var(--text-color);
+      box-shadow: 2px 2px 0 #4a5e4a;
+    }
+
+    form input.valid,
+    form textarea.valid {
+      border-color: #6a9a6a;
+    }
+
+    form input.invalid,
+    form textarea.invalid {
+      border-color: #c66;
+      background-color: #3a2222;
+    }
+
+    form input.invalid:focus,
+    form textarea.invalid:focus {
+      border-color: #c66;
+      box-shadow: 0 0 0 2px #c6666640;
+    }
+
+    form .field-hint.error {
+      color: #c66;
+    }
+
+    form .field-hint.ok {
+      color: #6a9a6a;
+    }
+  }
+
+  /* === Emoji === */
+  .emoji {
+    height: 1em;
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  /* === Utility === */
+  .half-width {
+    width: 50%;
   }
 </style>
