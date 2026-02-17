@@ -4,46 +4,19 @@
   posthog.register({
     connection_type: connection,
   });
+  posthog.register_once({
+    first_visit_at: new Date().toISOString(),
+  });
 
-  var form = document.querySelector('form[action*="resender.viruus.zip"]');
-  if (form) {
-    var fields = form.querySelectorAll('input, textarea');
-    fields.forEach(function(field) {
-      field.addEventListener('focus', function() {
-        posthog.capture('contact_field_focused', { field_name: field.name || field.type });
-      });
-    });
-
-    form.addEventListener('submit', function() {
-      var email = form.querySelector('input[name="email"]');
-      var name = form.querySelector('input[name="name"]');
-      var message = form.querySelector('textarea[name="message"]');
-      if (email && email.value) {
-        posthog.identify(email.value,
-          {
-            name: name ? name.value : undefined,
-            email: email.value,
-          },
-          {
-            first_contact_at: new Date().toISOString(),
-          }
-        );
-      }
-      posthog.capture('contact_form_submitted', {
-        message_length: message ? message.value.length : 0,
-        session_replay_url: posthog.get_session_replay_url({ withTimestamp: true }),
-      });
-    });
-  }
-
-  var content = document.querySelector('content');
-  if (content) {
+  // Scroll depth tracking
+  var main = document.querySelector('main');
+  if (main) {
     var scrollMilestones = { 25: false, 50: false, 75: false, 100: false };
     var startTime = Date.now();
 
     window.addEventListener('scroll', function() {
-      var rect = content.getBoundingClientRect();
-      var contentHeight = content.offsetHeight;
+      var rect = main.getBoundingClientRect();
+      var contentHeight = main.offsetHeight;
       var scrolled = window.innerHeight - rect.top;
       var pct = Math.min(100, Math.round((scrolled / contentHeight) * 100));
 

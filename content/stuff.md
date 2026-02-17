@@ -24,6 +24,7 @@ if you want you can get updates on stuff i do:
 (function() {
   var timer;
   var touched = {};
+  var formStartTime = null;
 
   function debounce(fn, ms) {
     clearTimeout(timer);
@@ -48,6 +49,7 @@ if you want you can get updates on stuff i do:
       el.classList.add('invalid');
       hint.textContent = 'email is required';
       hint.className = 'field-hint error';
+      posthog.capture('subscribe_validation_error', { field: name, error: 'required' });
       return;
     }
 
@@ -56,6 +58,7 @@ if you want you can get updates on stuff i do:
       el.classList.add('invalid');
       hint.textContent = 'not a valid email';
       hint.className = 'field-hint error';
+      posthog.capture('subscribe_validation_error', { field: name, error: 'invalid_email' });
       return;
     }
 
@@ -68,6 +71,15 @@ if you want you can get updates on stuff i do:
   var form = document.getElementById('stuff-form');
   var btn = document.getElementById('stuff-submit');
   btn.disabled = false;
+
+  form.addEventListener('focus', function(e) {
+    var el = e.target;
+    if (!el.name) return;
+    if (!formStartTime) {
+      formStartTime = Date.now();
+      posthog.capture('subscribe_field_focused', { field_name: el.name });
+    }
+  }, true);
 
   form.addEventListener('input', function(e) {
     var el = e.target;
@@ -93,28 +105,45 @@ if you want you can get updates on stuff i do:
     var emailEl = form.querySelector('input[name=email]');
     touched.email = true;
     validate(emailEl);
-    if (emailEl.classList.contains('invalid')) return;
+    if (emailEl.classList.contains('invalid')) {
+      posthog.capture('subscribe_form_submit_blocked', { invalid_fields: ['email'] });
+      return;
+    }
 
     var status = document.getElementById('form-status');
     btn.disabled = true;
     btn.textContent = 'signing up...';
+    var submitTime = Date.now();
+
     fetch(form.action, {
       method: 'POST',
       body: new FormData(form)
     }).then(function(res) {
       if (res.ok) {
         status.textContent = 'check your email to confirm your subscription (check in spam!)';
+        posthog.capture('subscribe_form_submitted', {
+          time_to_submit_seconds: formStartTime ? Math.round((submitTime - formStartTime) / 1000) : null,
+          session_replay_url: posthog.get_session_replay_url({ withTimestamp: true }),
+        });
+        if (emailEl.value) {
+          posthog.identify(emailEl.value, { email: emailEl.value }, {
+            first_subscribe_at: new Date().toISOString(),
+          });
+        }
         form.reset();
         touched = {};
+        formStartTime = null;
         emailEl.classList.remove('valid', 'invalid');
         var h = document.getElementById('email-hint');
         if (h) { h.textContent = '\u00a0'; h.className = 'field-hint'; }
         if (window.turnstile) turnstile.reset();
       } else {
         status.textContent = 'something went wrong. try again?';
+        posthog.capture('subscribe_form_error', { status: res.status });
       }
-    }).catch(function() {
+    }).catch(function(err) {
       status.textContent = 'something went wrong. try again?';
+      posthog.capture('subscribe_form_error', { error: err.message || 'network_error' });
     }).finally(function() {
       btn.disabled = false;
       btn.textContent = 'signup';

@@ -206,8 +206,16 @@ Client-side analytics via [PostHog](https://posthog.com/). Initialized in `layou
 
 ### Custom Events (custom_body.html)
 
-- **`contact_field_focused`**: Fires when a contact form field gets focus (field_name)
-- **`contact_form_submitted`**: Fires on contact form submit (message_length, session_replay_url)
+- **`contact_field_focused`**: Fires once per field when first focused (field_name)
+- **`contact_validation_error`**: Fires on inline validation failure (field, error)
+- **`contact_form_submit_blocked`**: Fires when submit is blocked by validation (invalid_fields)
+- **`contact_form_submitted`**: Fires on successful contact form submit (message_length, time_to_submit_seconds, session_replay_url)
+- **`contact_form_error`**: Fires on contact form fetch failure (status or error)
+- **`subscribe_field_focused`**: Fires when subscribe email field first focused (field_name)
+- **`subscribe_validation_error`**: Fires on subscribe validation failure (field, error)
+- **`subscribe_form_submit_blocked`**: Fires when subscribe submit is blocked (invalid_fields)
+- **`subscribe_form_submitted`**: Fires on successful subscribe (time_to_submit_seconds, session_replay_url)
+- **`subscribe_form_error`**: Fires on subscribe fetch failure (status or error)
 - **`scroll_depth`**: Fires at 25/50/75/100% scroll milestones (depth, title, path, time_to_reach_seconds)
 - **`membership_card_revealed`**: Fires when card UI is shown (source: 'click' | 'saved')
 - **`membership_card_signature_started`**: Fires when user starts drawing on signature (first stroke)
