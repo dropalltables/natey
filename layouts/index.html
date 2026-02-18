@@ -47,10 +47,16 @@
   }
   @media (max-width: 720px) {
     .home-cards.has-card {
-      flex-direction: column;
+      gap: 0;
     }
     .home-cards.has-card .home-cards__card {
-      max-width: none;
+      flex: 0 0 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0;
+    }
+    .home-cards.has-card li:has(.cards-trigger) {
+      display: list-item;
     }
   }
 </style>
@@ -84,6 +90,10 @@
   }
   initKonami();
 
+  function isMobile() {
+    return window.innerWidth <= 720;
+  }
+
   function hasValidSavedCard() {
     try {
       const raw = localStorage.getItem('viruus-membership-card');
@@ -109,13 +119,13 @@
     }
   }
 
-  if (hasValidSavedCard()) {
+  if (hasValidSavedCard() && !isMobile()) {
     showCard('saved');
   }
 
   document.querySelector('.cards-trigger')?.addEventListener('click', function(e) {
     e.preventDefault();
-    showCard('click');
+    if (!isMobile()) showCard('click');
   });
 </script>
 {{ end }}
