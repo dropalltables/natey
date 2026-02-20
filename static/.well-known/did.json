@@ -1,0 +1,24 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1",
+    "https://w3id.org/security/suites/secp256k1-2019/v1"
+  ],
+  "alsoKnownAs": ["at://viruus.zip"],
+  "id": "did:web:www.viruus.zip",
+  "service": [
+    {
+      "id": "#atproto_pds",
+      "serviceEndpoint": "https://pds.viruus.zip",
+      "type": "AtprotoPersonalDataServer"
+    }
+  ],
+  "verificationMethod": [
+    {
+      "controller": "did:web:www.viruus.zip",
+      "id": "did:web:www.viruus.zip#atproto",
+      "publicKeyMultibase": "zQ3shsJ4kqXpPE66JDU4oxJXEKNbBxf6NPJFvCkgSs4ozUzaC",
+      "type": "Multikey"
+    }
+  ]
+}
