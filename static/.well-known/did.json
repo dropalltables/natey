@@ -17,7 +17,7 @@
     {
       "controller": "did:web:www.viruus.zip",
       "id": "did:web:www.viruus.zip#atproto",
-      "publicKeyMultibase": "zQ3shsJ4kqXpPE66JDU4oxJXEKNbBxf6NPJFvCkgSs4ozUzaC",
+      "publicKeyMultibase": "zQ3shSb8QYnWzMc2FpFxs1EDvHsoUWD2BczcRtJVJQkV5rs9e",
       "type": "Multikey"
     }
   ]
