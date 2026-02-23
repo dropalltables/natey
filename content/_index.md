@@ -17,3 +17,4 @@ i make [things](/projects), a lot of them [on](https://catprinter.vercel.app) [t
 - js [sandboxes](/sandboxes) :boom.gif:
 - [feefts](/feefts)
 - <a href="#" class="cards-trigger">get a membership card</a>
+- if for some reason you need my public ssh key it is [here](https://github.com/dropalltables.keys)
