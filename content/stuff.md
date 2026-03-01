@@ -13,7 +13,7 @@ if you want you can get updates on stuff i do:
     <input type="email" name="email" placeholder="your@email.com" required>
     <span class="field-hint" id="email-hint"></span>
   </div>
-  <input type="hidden" name="audience" value="blog">
+  <input type="hidden" name="audience" value="words">
   <div class="cf-turnstile" data-sitekey="0x4AAAAAACCIH6LE-pwfc-u6"></div>
   <button type="submit" id="stuff-submit" disabled>signup</button>
 </form>

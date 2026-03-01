@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{ if eq .Type "blog" }}{{ if not .Params.menu }}
+{{ if eq .Type "words" }}{{ if not .Params.menu }}
 <h1>{{ .Title }}</h1>
 <p>
   <i>
@@ -13,7 +13,8 @@
   {{- partial "process-emojis.html" .Content -}}
 </content>
 
-{{ if eq .Type "blog" }}
+{{ if eq .Type "words" }}
+<p class="newsletter-advert">like this? i send out a newsletter sometimes - <a href="/stuff">subscribe here</a>.</p>
 {{ if (.Param "enablePostNavigator")}}
 {{- partial "post_navigator.html" . -}}
 {{ end }}

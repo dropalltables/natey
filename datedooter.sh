@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# datedooter.sh - Update blog post timestamp to current time
+# datedooter.sh - Update words post timestamp to current time
 # Usage: ./datedooter.sh <post-name>
 # Example: ./datedooter.sh email-is-hard
 
@@ -13,7 +13,7 @@ if [ $# -eq 0 ]; then
 fi
 
 POST_NAME="$1"
-POST_FILE="content/blog/${POST_NAME}.md"
+POST_FILE="content/words/${POST_NAME}.md"
 
 # Check if file exists
 if [ ! -f "$POST_FILE" ]; then

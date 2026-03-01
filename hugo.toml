@@ -7,6 +7,7 @@ theme = 'hugo-bearblog'
 
 # Basic metadata configuration for your blog.
 title = "dropalltables"
+capitalizeListTitles = false
 author = "dropalltables"
 copyright = "Copyright © 2025, dropalltables."
 languageCode = "en-US"
@@ -18,15 +19,29 @@ enableRobotsTXT = true
 disableKinds = ["taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 [permalinks]
-  blog = "/:slug/"
-  tags = "/blog/:slug"
+  words = "/:slug/"
+  tags = "/words/:slug"
   sandboxes = "/sandboxes/:slug/"
-  warning = "/warning/:slug/"
 
 [[menu.main]]
+  name = "contact"
+  url = "/contact"
+  weight = 60
+
+[[menu.links]]
+  name = "github"
+  url = "https://github.com/dropalltables"
+  weight = 10
+
+[[menu.links]]
+  name = "atproto"
+  url = "https://pds.ls/at://did:web:www.viruus.zip"
+  weight = 20
+
+[[menu.links]]
   name = "rss"
-  url = "/blog/index.xml"
-  weight = 100
+  url = "/words/index.xml"
+  weight = 30
 
 [params]
   # The "description" of your website. This is used in the meta data of your generated html.

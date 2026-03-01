@@ -1,6 +1,6 @@
 {{ define "main" }}
 <content>
-  <ul class="blog-posts">
+  <ul class="posts">
     {{ range .Pages }}
     <li>
       {{ $hasDate := .Params.date }}
@@ -14,9 +14,7 @@
       </span>
       {{ end }}
       <div class="post-line">
-        {{ $slug := .File.ContentBaseName }}
-        {{ $warningPage := .Site.GetPage (printf "/warning/%s" $slug) }}
-        <a href="{{ if $warningPage }}{{ $warningPage.RelPermalink }}{{ else }}{{ (printf "/warning/%s/" $slug) | relURL }}{{ end }}">{{ .Title }}</a>
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
         {{ with .Params.description }}
         <span class="post-description">{{ . }}</span>
         {{ end }}
