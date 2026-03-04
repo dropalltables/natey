@@ -48,7 +48,7 @@ const trill = [
 ];
 
 document.addEventListener('click', function(e) {
-  const el = e.target.closest('a, button, [role="button"], summary, input[type="submit"], input[type="button"], input[type="reset"], label');
+  const el = e.target.closest('a, button, [role="button"], summary, input[type="submit"], input[type="button"], input[type="reset"]');
   if (!el) return;
 
   if (el.closest('[data-haptic]')) { haptics.trigger(el.closest('[data-haptic]').dataset.haptic); return; }
