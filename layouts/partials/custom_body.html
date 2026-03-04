@@ -38,31 +38,31 @@
 <script type="module">
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const isAndroid = /android/i.test(navigator.userAgent);
-if (!isIOS && !isAndroid) return;
+if (isIOS || isAndroid) {
+  const { WebHaptics } = await import('https://unpkg.com/web-haptics@0.0.6/dist/index.mjs');
+  const haptics = new WebHaptics();
+  window.haptics = haptics;
 
-const { WebHaptics } = await import('https://unpkg.com/web-haptics@0.0.6/dist/index.mjs');
-const haptics = new WebHaptics();
-window.haptics = haptics;
+  const trill = [
+    { duration: 50, intensity: 0.9 },
+    { delay: 60, duration: 50, intensity: 0.9 },
+    { delay: 50, duration: 35, intensity: 1 },
+    { delay: 40, duration: 35, intensity: 1 },
+  ];
 
-const trill = [
-  { duration: 50, intensity: 0.9 },
-  { delay: 60, duration: 50, intensity: 0.9 },
-  { delay: 50, duration: 35, intensity: 1 },
-  { delay: 40, duration: 35, intensity: 1 },
-];
+  document.addEventListener('click', function(e) {
+    const el = e.target.closest('a, button, [role="button"], summary, input[type="submit"], input[type="button"], input[type="reset"]');
+    if (!el) return;
 
-document.addEventListener('click', function(e) {
-  const el = e.target.closest('a, button, [role="button"], summary, input[type="submit"], input[type="button"], input[type="reset"]');
-  if (!el) return;
-
-  if (el.closest('[data-haptic]')) { haptics.trigger(el.closest('[data-haptic]').dataset.haptic); return; }
-  if (el.matches('a.title'))                                        { if (isIOS) { e.preventDefault(); haptics.trigger(trill).then(() => { location.href = el.href; }); } else { haptics.trigger(trill); } return; }
-  if (el.matches('input[type="reset"]'))                            { haptics.trigger('warning'); return; }
-  if (el.matches('input[type="submit"], button[type="submit"]'))    { haptics.trigger('heavy'); return; }
-  if (el.matches('summary'))                                        { haptics.trigger('nudge'); return; }
-  if (el.matches('button, input[type="button"], [role="button"]'))  { haptics.trigger('rigid'); return; }
-  if (el.matches('a.nav-link'))                                     { haptics.trigger('light'); return; }
-  if (el.matches('a') && el.hostname !== location.hostname)         { haptics.trigger('soft'); return; }
-  haptics.trigger('selection');
-});
+    if (el.closest('[data-haptic]')) { haptics.trigger(el.closest('[data-haptic]').dataset.haptic); return; }
+    if (el.matches('a.title'))                                        { if (isIOS) { e.preventDefault(); haptics.trigger(trill).then(() => { location.href = el.href; }); } else { haptics.trigger(trill); } return; }
+    if (el.matches('input[type="reset"]'))                            { haptics.trigger('warning'); return; }
+    if (el.matches('input[type="submit"], button[type="submit"]'))    { haptics.trigger('heavy'); return; }
+    if (el.matches('summary'))                                        { haptics.trigger('nudge'); return; }
+    if (el.matches('button, input[type="button"], [role="button"]'))  { haptics.trigger('rigid'); return; }
+    if (el.matches('a.nav-link'))                                     { haptics.trigger('light'); return; }
+    if (el.matches('a') && el.hostname !== location.hostname)         { haptics.trigger('soft'); return; }
+    haptics.trigger('selection');
+  });
+}
 </script>
