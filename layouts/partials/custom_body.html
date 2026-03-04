@@ -36,7 +36,11 @@
 })();
 </script>
 <script type="module">
-import { WebHaptics } from 'https://unpkg.com/web-haptics@0.0.6/dist/index.mjs';
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = /android/i.test(navigator.userAgent);
+if (!isIOS && !isAndroid) return;
+
+const { WebHaptics } = await import('https://unpkg.com/web-haptics@0.0.6/dist/index.mjs');
 const haptics = new WebHaptics();
 window.haptics = haptics;
 
@@ -52,7 +56,7 @@ document.addEventListener('click', function(e) {
   if (!el) return;
 
   if (el.closest('[data-haptic]')) { haptics.trigger(el.closest('[data-haptic]').dataset.haptic); return; }
-  if (el.matches('a.title'))                                        { e.preventDefault(); haptics.trigger(trill).then(() => { location.href = el.href; }); return; }
+  if (el.matches('a.title'))                                        { if (isIOS) { e.preventDefault(); haptics.trigger(trill).then(() => { location.href = el.href; }); } else { haptics.trigger(trill); } return; }
   if (el.matches('input[type="reset"]'))                            { haptics.trigger('warning'); return; }
   if (el.matches('input[type="submit"], button[type="submit"]'))    { haptics.trigger('heavy'); return; }
   if (el.matches('summary'))                                        { haptics.trigger('nudge'); return; }
