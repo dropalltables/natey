@@ -107,6 +107,7 @@ if you want you can get updates on stuff i do:
     validate(emailEl);
     if (emailEl.classList.contains('invalid')) {
       posthog.capture('subscribe_form_submit_blocked', { invalid_fields: ['email'] });
+      if (window.haptics) window.haptics.trigger('error');
       return;
     }
 
@@ -120,6 +121,7 @@ if you want you can get updates on stuff i do:
       body: new FormData(form)
     }).then(function(res) {
       if (res.ok) {
+        if (window.haptics) window.haptics.trigger('success');
         status.textContent = 'check your email to confirm your subscription (check in spam!)';
         posthog.capture('subscribe_form_submitted', {
           time_to_submit_seconds: formStartTime ? Math.round((submitTime - formStartTime) / 1000) : null,
@@ -138,10 +140,12 @@ if you want you can get updates on stuff i do:
         if (h) { h.textContent = '\u00a0'; h.className = 'field-hint'; }
         if (window.turnstile) turnstile.reset();
       } else {
+        if (window.haptics) window.haptics.trigger('error');
         status.textContent = 'something went wrong. try again?';
         posthog.capture('subscribe_form_error', { status: res.status });
       }
     }).catch(function(err) {
+      if (window.haptics) window.haptics.trigger('error');
       status.textContent = 'something went wrong. try again?';
       posthog.capture('subscribe_form_error', { error: err.message || 'network_error' });
     }).finally(function() {

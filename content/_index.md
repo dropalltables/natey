@@ -12,6 +12,7 @@ i make [things](/projects), a lot of them [on](https://catprinter.vercel.app) [t
 
 #### random
 - my username's [origin](https://xkcd.com/327/)
+- **this website has haptics!!! on ios!!!** (i'm very excited about this, try clicking the home link in the top left corner :D)
 - [this site](https://github.com/dropalltables/viruus) was customized from [hugo bear](https://github.com/janraasch/hugo-bearblog/) and uses [berkeley mono](https://berkeleymono.com), [departure mono](https://departuremono.com), and [inter](https://rsms.me/inter/)
 - other than [cloudflare turnstile](https://www.cloudflare.com/application-services/products/turnstile/) for the forms and the membership cards, [this website](https://github.com/dropalltables/viruus) is mostly functional without javascript
 - [sandboxes](/sandboxes) :boom.gif:
