@@ -510,3 +510,23 @@ Licensed under GNU Affero General Public License v3.0
 - **Resender project**: Email system is open-sourced at https://github.com/dropalltables/resender
 - **Related services**: Uses Cloudflare Workers for form handling (not in this repo)
 - **Blog post about email**: See `content/blog/email-is-hard.md` for detailed explanation of the email system architecture
+
+## Cursor Cloud specific instructions
+
+Hugo extended is installed at `/usr/local/bin/hugo`. The theme submodule is initialized automatically by the update script.
+
+### Running the dev server
+
+```bash
+hugo server -D --bind 0.0.0.0 --port 1313
+```
+
+Use `--bind 0.0.0.0` so the server is reachable from the Desktop pane browser. The `-D` flag includes draft posts.
+
+### Gotchas
+
+- Blog posts live in `content/words/` (not `content/blog/` as some parts of this file reference). The AGENTS.md references to `content/blog/` are from an older directory layout; the actual directory is `content/words/`.
+- The archetype for blog posts is `archetypes/blog.md` but posts are created with `hugo new content/words/post-name.md`.
+- Permalinks use `/:slug/` derived from the title, not the filename path. Check `hugo.toml` for the exact permalink config.
+- There is no linter, test framework, or package manager -- this is a pure Hugo static site. Build validation is `hugo` (exit code 0 = success).
+- No external services (databases, Docker, etc.) are needed to run the dev server.
