@@ -3,6 +3,12 @@
 {{ end }}
 
 {{ define "main" }}
+<div class="progressive-blur progressive-blur--left" aria-hidden="true">
+  <div></div><div></div><div></div><div></div>
+</div>
+<div class="progressive-blur progressive-blur--right" aria-hidden="true">
+  <div></div><div></div><div></div><div></div>
+</div>
 <div class="home-cards" id="homeCards">
   <div class="home-cards__text">
     {{- partial "process-emojis.html" .Content -}}
@@ -16,24 +22,42 @@
     display: flex;
     align-items: stretch;
     gap: 0;
-    position: relative;
     transition: gap 0.6s ease;
   }
 
-  .home-cards::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
+  .progressive-blur {
+    position: fixed;
+    top: 0;
     bottom: 0;
-    height: 64px;
+    width: 72px;
     pointer-events: none;
-    z-index: 10;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 100%);
+    z-index: 9999;
   }
+
+  .progressive-blur--left {
+    left: max(0px, calc((100vw - 720px) / 2));
+  }
+
+  .progressive-blur--right {
+    right: max(0px, calc((100vw - 720px) / 2));
+  }
+
+  .progressive-blur > div {
+    position: absolute;
+    inset: 0;
+    -webkit-backdrop-filter: blur(var(--b));
+    backdrop-filter: blur(var(--b));
+  }
+
+  .progressive-blur--left > div:nth-child(1) { --b: 1px;  -webkit-mask-image: linear-gradient(to right, black, transparent 100%); mask-image: linear-gradient(to right, black, transparent 100%); }
+  .progressive-blur--left > div:nth-child(2) { --b: 3px;  -webkit-mask-image: linear-gradient(to right, black, transparent 70%);  mask-image: linear-gradient(to right, black, transparent 70%); }
+  .progressive-blur--left > div:nth-child(3) { --b: 8px;  -webkit-mask-image: linear-gradient(to right, black, transparent 45%);  mask-image: linear-gradient(to right, black, transparent 45%); }
+  .progressive-blur--left > div:nth-child(4) { --b: 16px; -webkit-mask-image: linear-gradient(to right, black, transparent 20%);  mask-image: linear-gradient(to right, black, transparent 20%); }
+
+  .progressive-blur--right > div:nth-child(1) { --b: 1px;  -webkit-mask-image: linear-gradient(to left, black, transparent 100%); mask-image: linear-gradient(to left, black, transparent 100%); }
+  .progressive-blur--right > div:nth-child(2) { --b: 3px;  -webkit-mask-image: linear-gradient(to left, black, transparent 70%);  mask-image: linear-gradient(to left, black, transparent 70%); }
+  .progressive-blur--right > div:nth-child(3) { --b: 8px;  -webkit-mask-image: linear-gradient(to left, black, transparent 45%);  mask-image: linear-gradient(to left, black, transparent 45%); }
+  .progressive-blur--right > div:nth-child(4) { --b: 16px; -webkit-mask-image: linear-gradient(to left, black, transparent 20%);  mask-image: linear-gradient(to left, black, transparent 20%); }
   .home-cards.has-card {
     gap: 2rem;
   }
