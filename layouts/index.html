@@ -16,7 +16,33 @@
     display: flex;
     align-items: stretch;
     gap: 0;
+    position: relative;
     transition: gap 0.6s ease;
+  }
+
+  .home-cards::before,
+  .home-cards::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 64px;
+    pointer-events: none;
+    z-index: 10;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .home-cards::before {
+    left: -24px;
+    -webkit-mask-image: linear-gradient(to right, black 0%, transparent 100%);
+    mask-image: linear-gradient(to right, black 0%, transparent 100%);
+  }
+
+  .home-cards::after {
+    right: -24px;
+    -webkit-mask-image: linear-gradient(to left, black 0%, transparent 100%);
+    mask-image: linear-gradient(to left, black 0%, transparent 100%);
   }
   .home-cards.has-card {
     gap: 2rem;
