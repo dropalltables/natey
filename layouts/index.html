@@ -3,9 +3,6 @@
 {{ end }}
 
 {{ define "main" }}
-<div class="progressive-blur" aria-hidden="true">
-  <div></div><div></div><div></div><div></div>
-</div>
 <div class="home-cards" id="homeCards">
   <div class="home-cards__text">
     {{- partial "process-emojis.html" .Content -}}
@@ -22,10 +19,6 @@
     transition: gap 0.6s ease;
   }
 
-  @media (max-width: 720px) {
-    .progressive-blur { display: none; }
-  }
-
   .progressive-blur {
     position: fixed;
     bottom: 0;
@@ -34,11 +27,6 @@
     height: 160px;
     pointer-events: none;
     z-index: 9999;
-    display: none;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .progressive-blur { display: block; }
   }
 
   .progressive-blur > div {
@@ -91,12 +79,15 @@
 <script type="module">
   import { initEmbeddedCard } from '/card/init.js';
 
-  const blur = document.querySelector('.progressive-blur');
-  if (blur) {
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const blur = document.createElement('div');
+    blur.className = 'progressive-blur';
+    blur.setAttribute('aria-hidden', 'true');
+    blur.innerHTML = '<div></div><div></div><div></div><div></div>';
+    document.body.prepend(blur);
     const update = () => {
-      const distFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
-      const opacity = Math.min(1, distFromBottom / 80);
-      blur.style.opacity = opacity;
+      const dist = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+      blur.style.opacity = Math.min(1, dist / 80);
     };
     window.addEventListener('scroll', update, { passive: true });
     update();
