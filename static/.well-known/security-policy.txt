@@ -1,0 +1,24 @@
+Security Policy
+
+viruus.zip welcomes responsible security research. If you believe you've found a vulnerability, we ask that you report it to us before disclosing it publicly.
+
+How to Report
+
+Email hello@viruus.zip with a description of the issue, steps to reproduce, and any relevant screenshots or proof of concept. Please encrypt sensitive reports using our PGP key, linked in our security.txt.
+
+What We Ask
+
+- Give us reasonable time to investigate and fix the issue before any public disclosure.
+- Do not access, modify, or delete data belonging to other users.
+- Do not perform denial-of-service attacks or disrupt our services.
+- Do not use automated scanning tools at a volume that degrades service for others.
+
+What We Promise
+
+- We will acknowledge your report within 5 business days.
+- We will not pursue legal action against researchers acting in good faith and in accordance with this policy.
+- We will credit you (if you want) once the issue is resolved.
+
+Scope
+
+This policy applies to services hosted on viruus.zip and its subdomains. Third-party services we use are out of scope.
