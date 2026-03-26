@@ -86,6 +86,17 @@
 <script type="module">
   import { initEmbeddedCard } from '/card/init.js';
 
+  const blur = document.querySelector('.progressive-blur');
+  if (blur) {
+    const update = () => {
+      const distFromBottom = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+      const opacity = Math.min(1, distFromBottom / 80);
+      blur.style.opacity = opacity;
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
   const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   const VIP_STORAGE_KEY = 'viruus-vip-badge';
 
