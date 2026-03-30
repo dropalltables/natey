@@ -92,8 +92,10 @@
 
   /* === Typography === */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-main);
+    font-family: var(--font-link);
     color: var(--heading-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   strong, b {
@@ -125,7 +127,7 @@
 
   /* === Links === */
   a {
-    font-family: var(--font-link);
+    font-family: var(--font-main);
     color: var(--link-color);
     cursor: pointer;
     text-decoration: none;
@@ -139,6 +141,7 @@
 
   nav a {
     margin-right: 8px;
+    font-family: var(--font-link);
   }
 
   nav a.nav-link {
@@ -192,6 +195,22 @@
     margin-block-start: 1em;
     margin-block-end: 1em;
     overflow-x: auto;
+  }
+
+  /* === Lists === */
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+  }
+
+  ul li {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  ul li::before {
+    content: "- ";
   }
 
   /* === Blog post list === */
