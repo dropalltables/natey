@@ -52,4 +52,4 @@ New blog posts are automatically sent via Resend when pushed to main. Requires G
 
 This project is licensed under the GNU Affero General Public License v3.0
 
-Copyright © 2025, dropalltables
+Copyright © 2026, natey hecht

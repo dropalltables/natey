@@ -14,7 +14,7 @@ This is a static website built with [Hugo](https://gohugo.io/) using the [hugo-b
 - GitHub Actions for email automation
 
 **Base URL**: https://viruus.zip  
-**Author**: dropalltables
+**Author**: natey hecht
 
 ## Essential Commands
 
@@ -296,7 +296,7 @@ The workflow intelligently handles different scenarios:
 6. Sends broadcast to appropriate segment
 
 **Email format**:
-- **From**: `dropalltables <blog@system.viruus.zip>`
+- **From**: `natey hecht <blog@system.viruus.zip>`
 - **Subject**: Post title (or `[DRAFT] Post title` for test emails)
 - **HTML**: Converted markdown content
 
@@ -501,7 +501,7 @@ Before committing changes:
 
 ## License
 
-Copyright © 2025, dropalltables  
+Copyright © 2026, natey hecht  
 Licensed under GNU Affero General Public License v3.0
 
 ## Additional Context

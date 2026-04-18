@@ -232,7 +232,7 @@ jobs:
             # Create JSON payload
             JSON_PAYLOAD=$(jq -n \
               --arg segment_id "$TARGET_SEGMENT_ID" \
-              --arg from "dropalltables <blog@system.viruus.zip>" \
+              --arg from "natey hecht <blog@system.viruus.zip>" \
               --arg name "$TITLE" \
               --arg subject "$EMAIL_SUBJECT" \
               --argjson html "$POST_HTML_ESCAPED" \
