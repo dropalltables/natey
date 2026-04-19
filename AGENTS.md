@@ -296,7 +296,7 @@ The workflow intelligently handles different scenarios:
 6. Sends broadcast to appropriate segment
 
 **Email format**:
-- **From**: `natey hecht <blog@system.viruus.zip>`
+- **From**: `natey hecht <blog@natey.sh>`
 - **Subject**: Post title (or `[DRAFT] Post title` for test emails)
 - **HTML**: Converted markdown content
 
