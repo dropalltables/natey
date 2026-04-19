@@ -4,21 +4,21 @@
     "https://w3id.org/security/multikey/v1",
     "https://w3id.org/security/suites/secp256k1-2019/v1"
   ],
-  "alsoKnownAs": ["at://viruus.zip"],
-  "id": "did:web:www.viruus.zip",
+  "id": "did:web:natey.me",
+  "alsoKnownAs": ["at://natey.me"],
+  "verificationMethod": [
+    {
+      "id": "did:web:natey.me#atproto",
+      "type": "Multikey",
+      "controller": "did:web:natey.me",
+      "publicKeyMultibase": "zQ3shSb8QYnWzMc2FpFxs1EDvHsoUWD2BczcRtJVJQkV5rs9e"
+    }
+  ],
   "service": [
     {
       "id": "#atproto_pds",
-      "serviceEndpoint": "https://pds.viruus.zip",
-      "type": "AtprotoPersonalDataServer"
-    }
-  ],
-  "verificationMethod": [
-    {
-      "controller": "did:web:www.viruus.zip",
-      "id": "did:web:www.viruus.zip#atproto",
-      "publicKeyMultibase": "zQ3shSb8QYnWzMc2FpFxs1EDvHsoUWD2BczcRtJVJQkV5rs9e",
-      "type": "Multikey"
+      "type": "AtprotoPersonalDataServer",
+      "serviceEndpoint": "https://pds.natey.sh"
     }
   ]
 }
