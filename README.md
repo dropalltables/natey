@@ -1,4 +1,4 @@
-# [viruus.zip](https://viruus.zip)
+# [natey.me](https://natey.me)
 
 My personal website and blog built with [Hugo](https://gohugo.io/) and the [hugo-bearblog](https://github.com/janraasch/hugo-bearblog/) theme, uses [resender](https://github.com/dropalltables/resender) for emails.
 
@@ -11,7 +11,7 @@ brew install hugo
 
 2. Clone this repository with submodules:
 ```bash
-git clone --recurse-submodules https://github.com/dropalltables/viruus.git
+git clone --recurse-submodules https://github.com/dropalltables/natey.git
 ```
 
 ## Development
