@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Guide for AI agents working in the viruus.zip repository - a personal website and blog built with Hugo.
+Guide for AI agents working in the natey.me repository - a personal website and blog built with Hugo.
 
 ## Project Overview
 
@@ -13,7 +13,7 @@ This is a static website built with [Hugo](https://gohugo.io/) using the [hugo-b
 - Client-side analytics via PostHog (session recording, heatmaps, autocapture, error tracking)
 - GitHub Actions for email automation
 
-**Base URL**: https://viruus.zip  
+**Base URL**: https://natey.me  
 **Author**: natey hecht
 
 ## Essential Commands
@@ -106,7 +106,7 @@ The `datedooter.sh` script updates the `date` field in a blog post's frontmatter
 Key configuration settings:
 
 - **Theme**: `hugo-bearblog` (git submodule)
-- **Base URL**: `https://viruus.zip`
+- **Base URL**: `https://natey.me`
 - **Permalinks**: Blog posts use `/:slug/` format (Bearblog-style)
 - **Taxonomies**: Disabled (`disableKinds = ["taxonomy"]`)
 - **Menu**: Defined in `[[menu.main]]` blocks and page frontmatter
@@ -289,7 +289,7 @@ The workflow intelligently handles different scenarios:
 2. Extracts frontmatter (title, draft status)
 3. Converts markdown content to HTML using pandoc
 4. Processes HTML:
-   - Converts relative image paths to absolute URLs (`https://viruus.zip/images/`)
+   - Converts relative image paths to absolute URLs (`https://natey.me/images/`)
    - Removes footnote anchor links (email clients don't handle them well)
    - Strips `id` and `role` attributes from footnote elements
 5. Creates Resend broadcast via API
@@ -313,7 +313,7 @@ Deployed to **Cloudflare Pages** (auto-configured via dashboard, no wrangler.tom
 
 - **Build command**: `hugo`
 - **Output directory**: `public/`
-- **Domain**: viruus.zip
+- **Domain**: natey.me
 
 ### Cloudflare Pages Setup
 
@@ -414,7 +414,7 @@ git submodule update --remote themes/hugo-bearblog
    - Updates to published posts are silently skipped
 
 2. **Image paths in emails**:
-   - Relative paths (`/images/`) converted to absolute (`https://viruus.zip/images/`)
+   - Relative paths (`/images/`) converted to absolute (`https://natey.me/images/`)
    - Ensure images are in `static/images/` not `assets/images/`
 
 3. **Footnotes in emails**:
@@ -440,7 +440,7 @@ git submodule update --remote themes/hugo-bearblog
 2. **Contact form**:
    - Uses Cloudflare Turnstile widget (`data-sitekey="0x4AAAAAACCIH6LE-pwfc-u6"`)
    - Loads Turnstile script: `https://challenges.cloudflare.com/turnstile/v0/api.js`
-   - Submits to `https://resender.viruus.zip/contact` via `fetch()`
+   - Submits to `https://resender.natey.sh/contact` via `fetch()`
    - Success/error feedback shown inline on the page
    - Form fields: name, email, message
    - Inline validation with debounced input validation, immediate blur validation, and visual feedback
@@ -451,8 +451,8 @@ git submodule update --remote themes/hugo-bearblog
    - Case-sensitive
 
 4. **URL structure**:
-   - Blog posts: `https://viruus.zip/post-slug/`
-   - Pages: `https://viruus.zip/page-name/`
+   - Blog posts: `https://natey.me/post-slug/`
+   - Pages: `https://natey.me/page-name/`
    - No `/blog/` prefix in URLs (Bearblog style)
 
 ### Deployment
