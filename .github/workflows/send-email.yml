@@ -153,7 +153,7 @@ jobs:
             TITLE=$(echo "$FRONTMATTER" | grep "^title\s*=" | head -n 1 | sed 's/^title\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
             DESCRIPTION=$(echo "$FRONTMATTER" | grep "^description\s*=" | head -n 1 | sed 's/^description\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
             POST_SLUG=$(basename "$file" .md)
-            POST_URL="https://viruus.zip/$POST_SLUG/"
+            POST_URL="https://natey.me/$POST_SLUG/"
             POST_DATE=$(echo "$FRONTMATTER" | grep "^date\s*=" | head -n 1 | sed 's/^date\s*=\s*//' | sed 's/^"\(.*\)"$/\1/' | sed "s/^'\(.*\)'$/\1/")
             POST_DATE_ISO="$POST_DATE"
             POST_DATE_DISPLAY=$(date -d "$POST_DATE" "+%d %b, %Y" 2>/dev/null || echo "$POST_DATE")
@@ -183,7 +183,7 @@ jobs:
             POST_HTML=$(echo "$POST_CONTENT" | pandoc -f markdown -t html)
             
             # Fix relative image paths to absolute URLs
-            POST_HTML=$(echo "$POST_HTML" | sed 's|src="/images/|src="https://viruus.zip/images/|g')
+            POST_HTML=$(echo "$POST_HTML" | sed 's|src="/images/|src="https://natey.me/images/|g')
             
             # Inline CSS classes (email clients don't support external CSS)
             # Convert class="half-width" to inline style
@@ -232,7 +232,7 @@ jobs:
             # Create JSON payload
             JSON_PAYLOAD=$(jq -n \
               --arg segment_id "$TARGET_SEGMENT_ID" \
-              --arg from "natey hecht <blog@system.viruus.zip>" \
+              --arg from "natey hecht <blog@natey.sh>" \
               --arg name "$TITLE" \
               --arg subject "$EMAIL_SUBJECT" \
               --argjson html "$POST_HTML_ESCAPED" \
