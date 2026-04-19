@@ -8,7 +8,7 @@ title = "stuff i do"
 
 if you want you can get updates on stuff i do:
 
-<form id="stuff-form" action="https://resender.viruus.zip/subscribe" method="POST" novalidate>
+<form id="stuff-form" action="https://resender.natey.sh/subscribe" method="POST" novalidate>
   <div class="field">
     <input type="email" name="email" placeholder="your@email.com" required>
     <span class="field-hint" id="email-hint"></span>

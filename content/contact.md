@@ -8,7 +8,7 @@ title = "contact me"
 
 for some reason a lot of people [have been sending me requests](/feefts) for prices. i do not know for what, or why. all of the people have one word names, ending in feeft. to all the feefts: **please stop.** im begging you.
 
-<form id="contact-form" action="https://resender.viruus.zip/contact" method="POST" novalidate>
+<form id="contact-form" action="https://resender.natey.sh/contact" method="POST" novalidate>
   <div class="field">
     <input type="text" name="name" placeholder="your name" required>
     <span class="field-hint" id="name-hint"></span>
