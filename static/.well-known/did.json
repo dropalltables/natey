@@ -11,7 +11,7 @@
       "id": "did:web:natey.me#atproto",
       "type": "Multikey",
       "controller": "did:web:natey.me",
-      "publicKeyMultibase": "zQ3sha3XdxCMQyd7Kbr2nbUUJocq7Ri39ZzZ2oktH6C6DQtui"
+      "publicKeyMultibase": "zQ3shTjcr8CeS9AqoxpVwn4P78GjeC5okHqiRdNG4JyHsWQeZ"
     }
   ],
   "service": [
