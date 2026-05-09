@@ -83,6 +83,7 @@ for some reason a lot of people [have been sending me requests](/feefts) for pri
   form.addEventListener('focus', function(e) {
     var el = e.target;
     if (!el.name) return;
+    if (!window.posthog?.sessionRecordingStarted?.()) window.posthog?.startSessionRecording?.();
     if (!formStartTime) formStartTime = Date.now();
     if (!focusedFields[el.name]) {
       focusedFields[el.name] = true;
@@ -111,6 +112,7 @@ for some reason a lot of people [have been sending me requests](/feefts) for pri
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    if (!window.posthog?.sessionRecordingStarted?.()) window.posthog?.startSessionRecording?.();
     var fields = form.querySelectorAll('input:not([type=hidden]), textarea');
     var ok = true;
     var invalidFields = [];

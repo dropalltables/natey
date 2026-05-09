@@ -75,6 +75,7 @@ if you want you can get updates on stuff i do:
   form.addEventListener('focus', function(e) {
     var el = e.target;
     if (!el.name) return;
+    if (!window.posthog?.sessionRecordingStarted?.()) window.posthog?.startSessionRecording?.();
     if (!formStartTime) {
       formStartTime = Date.now();
       posthog.capture('subscribe_field_focused', { field_name: el.name });
@@ -102,6 +103,7 @@ if you want you can get updates on stuff i do:
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    if (!window.posthog?.sessionRecordingStarted?.()) window.posthog?.startSessionRecording?.();
     var emailEl = form.querySelector('input[name=email]');
     touched.email = true;
     validate(emailEl);

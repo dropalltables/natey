@@ -1,7 +1,3 @@
-{{ define "extra_head" }}
-<link rel="stylesheet" href="/card/css/embed.css">
-{{ end }}
-
 {{ define "main" }}
 <div class="home-cards" id="homeCards">
   <div class="home-cards__text">
@@ -55,10 +51,32 @@
   }
 </style>
 <script type="module">
-  import { initEmbeddedCard } from '/card/init.js';
-
   const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
   const VIP_STORAGE_KEY = 'viruus-vip-badge';
+  let cardAssetsPromise;
+
+  function loadCardAssets() {
+    if (!cardAssetsPromise) {
+      const cssReady = new Promise((resolve, reject) => {
+        const existing = document.querySelector('link[href="/card/css/embed.css"]');
+        if (existing) {
+          resolve();
+          return;
+        }
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/card/css/embed.css';
+        link.onload = resolve;
+        link.onerror = reject;
+        document.head.appendChild(link);
+      });
+      cardAssetsPromise = Promise.all([
+        cssReady,
+        import('/card/init.js'),
+      ]).then(([, module]) => module);
+    }
+    return cardAssetsPromise;
+  }
 
   function initKonami() {
     let i = 0;
@@ -99,12 +117,15 @@
     const container = document.getElementById('homeCards');
     if (!container) return;
     container.classList.add('has-card');
+    if (!window.posthog?.sessionRecordingStarted?.()) window.posthog?.startSessionRecording?.();
     window.posthog?.capture('membership_card_revealed', { source: source || 'click' });
     const cardEmbed = document.getElementById('homeCardEmbed');
     if (cardEmbed && !cardEmbed.dataset.initialized) {
       cardEmbed.dataset.initialized = 'true';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => initEmbeddedCard(cardEmbed));
+      loadCardAssets().then(({ initEmbeddedCard }) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => initEmbeddedCard(cardEmbed));
+        });
       });
     }
   }
