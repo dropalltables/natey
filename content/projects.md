@@ -5,6 +5,13 @@ weight = 50
 +++
 
 ## projects
+
+i send out a newsletter sometimes with new projects - [subscribe here](/stuff)
+
+**[patchless](https://patchless.natey.sh)**
+
+a filtering engine for unpropagated kernel security patches
+
 **[catprinter](https://github.com/dropalltables/catprinter)**
 
 a web ui for a reverse engineered aliexpress thermal printer
