@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'content/blog/**'
+      - 'content/words/**'
 
 jobs:
   send-email:
@@ -41,8 +41,8 @@ jobs:
           fi
           echo ""
           
-          # Get list of new or modified files in content/blog/
-          CHANGED_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD | grep '^content/blog/.*\.md$' | grep -v '_index.md' || true)
+          # Get list of new or modified files in content/words/
+          CHANGED_FILES=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD | grep '^content/words/.*\.md$' | grep -v '_index.md' || true)
           
           if [ -z "$CHANGED_FILES" ]; then
             echo "No new or modified blog posts found."

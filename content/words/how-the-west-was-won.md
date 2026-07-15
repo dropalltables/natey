@@ -1,5 +1,5 @@
 +++
-date = '2026-07-13T19:36:06-07:00'
+date = '2026-07-15T12:42:59-07:00'
 draft = false
 title = 'On Finding Vulnerabilities in the Kernel, and Automating it'
 +++
