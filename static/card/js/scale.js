@@ -4,6 +4,9 @@ function initScaleForContainer(container) {
   const BASE_W = 637.5;
   const BASE_H = 1012.5;
 
+  let lastScale = null;
+  let rafId = null;
+
   function update() {
     const rect = container.getBoundingClientRect();
     let w = rect.width;
@@ -17,7 +20,20 @@ function initScaleForContainer(container) {
     const scaleW = w / BASE_W;
     const scaleH = h / BASE_H;
     const scale = Math.min(scaleW, scaleH, 0.7) * 0.95;
-    container.style.setProperty('--scale', String(scale));
+
+    // Writing --scale resizes the observed subtree, so re-firing the
+    // ResizeObserver with an unchanged value would loop indefinitely
+    // ("ResizeObserver loop completed with undelivered notifications").
+    // Bail out when the scale hasn't moved, and defer the write to the
+    // next frame so the mutation lands outside the observer's delivery pass.
+    if (lastScale !== null && Math.abs(scale - lastScale) < 1e-4) return;
+    lastScale = scale;
+
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      container.style.setProperty('--scale', String(scale));
+    });
   }
 
   update();

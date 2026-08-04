@@ -4,6 +4,21 @@
         api_host: 'https://pickles.natey.sh',
         ui_host: 'https://us.posthog.com',
         defaults: '2026-01-30',
+        // Drop the benign "ResizeObserver loop completed with undelivered
+        // notifications" browser notification. It carries no usable stack
+        // (filename is the page URL, function "?", line/column 0) and nothing
+        // is broken when it fires, so it only adds noise to error tracking.
+        before_send: function (event) {
+            if (event && event.event === '$exception') {
+                var list = (event.properties && event.properties.$exception_list) || [];
+                var isResizeLoop = list.some(function (e) {
+                    return e && typeof e.value === 'string'
+                        && e.value.indexOf('ResizeObserver loop') !== -1;
+                });
+                if (isResizeLoop) return null;
+            }
+            return event;
+        },
         advanced_disable_feature_flags: true,
         person_profiles: 'always',
         autocapture: {
