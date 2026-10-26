@@ -3,8 +3,6 @@ title = "home"
 menu = "main"
 weight = 1
 +++
-# services are down due to php2shell. hopefully up by 5pm oct 21 PST
-
 <mark>i've started my biggest project yet, a filtering engine and db for unpropagated kernel security patches. check it out at https://patchless.natey.sh.</mark>
 
 #### about
